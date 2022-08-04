@@ -1,34 +1,12 @@
 const Category = require("../models/Category");
+const genericController = require("./GenericController");
 
 const categoryPost = async(req, res) => {
-    try {
-        /**
-         * 1-CategoryName ve parent bilgisi gelir
-         * 2-parent almamızın sebebi hiyerarşi için(id)
-         */
-        const category = new Category({
-            categoryName: req.body.categoryName,
-            parent: req.body.parent, //parent id(hangi kategorinin alt kategorisi)
-        });
-        res.json(category);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+    await genericController.genericPost(req, res, Category);
 };
 
 const categoryUpdate = async(req, res) => {
-    try {
-        /**
-         * 1-CategoryName ve parent bilgisi gelir
-         * 2-parent almamızın sebebi hiyerarşi için(id)
-         */
-        const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
-            new: true,
-        });
-        res.json(category);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+    await genericController.genericUpdate(req, res, Category);
 };
 
 const getSubCategory = async(req, res) => {
@@ -41,15 +19,30 @@ const getSubCategory = async(req, res) => {
         const tree = await parent.getChildrenTree({
             options: { lean: false },
         });
-        // var array = [];
-        // tree.map((item) => {
-        //     array.push({ id: item._id, categoryName: item.categoryName });
-        // });
+        var array = [];
+        tree.map((item) => {
+            array.push({ id: item._id, categoryName: item.categoryName });
+        });
 
-        res.json(tree);
+        res.json(array);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
 };
+
+// const getSubCategory = async(req, res) => {
+//     try {
+//         console.log("id", req.params.id);
+
+//         const pattern = ".*" + req.params.id + ".*";
+//         // console.log("pattern", pattern);
+//         const category = await Category.find({
+//             path: { $regex: pattern },
+//         });
+//         res.json(category);
+//     } catch (error) {
+//         res.status(400).json({ error: error.message });
+//     }
+// };
 
 module.exports = { categoryPost, getSubCategory, categoryUpdate };
