@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Category = require("./Category");
+// const Category = require("./Category");
 
 const AdvertSchema = new mongoose.Schema({
     image: [{
