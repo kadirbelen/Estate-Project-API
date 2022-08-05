@@ -30,19 +30,4 @@ const getSubCategory = async(req, res) => {
     }
 };
 
-// const getSubCategory = async(req, res) => {
-//     try {
-//         console.log("id", req.params.id);
-
-//         const pattern = ".*" + req.params.id + ".*";
-//         // console.log("pattern", pattern);
-//         const category = await Category.find({
-//             path: { $regex: pattern },
-//         });
-//         res.json(category);
-//     } catch (error) {
-//         res.status(400).json({ error: error.message });
-//     }
-// };
-
 module.exports = { categoryPost, getSubCategory, categoryUpdate };

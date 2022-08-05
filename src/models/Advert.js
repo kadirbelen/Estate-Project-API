@@ -17,9 +17,8 @@ const AdvertSchema = new mongoose.Schema({
     itemStatus: { type: String },
     createDate: { type: Date, default: Date.now },
     updateDate: { type: Date, default: Date.now },
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
+    categoryPath: {
+        type: String,
         required: true,
     },
 });
