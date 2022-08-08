@@ -2,11 +2,11 @@ const Category = require("../models/Category");
 const genericController = require("./GenericController");
 
 const categoryPost = async(req, res) => {
-    await genericController.genericPost(req, res, Category);
+    await genericController.genericPost(req.body, res, Category);
 };
 
 const categoryUpdate = async(req, res) => {
-    await genericController.genericUpdate(req, res, Category);
+    await genericController.genericUpdate(req.body, res, Category);
 };
 
 const getSubCategory = async(req, res) => {
