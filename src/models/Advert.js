@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const Category = require("./Category");
+const AdvertProperty = require("./AdvertProperty");
 
 const AdvertSchema = new mongoose.Schema({
     image: [{
@@ -15,12 +15,16 @@ const AdvertSchema = new mongoose.Schema({
     floor: { type: Number, required: true },
     heatingType: { type: String, required: true },
     itemStatus: { type: String },
-    createDate: { type: Date, default: Date.now },
-    updateDate: { type: Date, default: Date.now },
     categoryPath: {
         type: String,
         required: true,
     },
+    properties: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "AdvertProperty",
+    },
+}, {
+    versionKey: false,
 });
 
 module.exports = mongoose.model("Advert", AdvertSchema);
