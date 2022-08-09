@@ -25,6 +25,7 @@ const AdvertSchema = new mongoose.Schema({
     },
 }, {
     versionKey: false,
+    timestamps: true,
 });
 
 module.exports = mongoose.model("Advert", AdvertSchema);

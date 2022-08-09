@@ -7,11 +7,14 @@ const advertRouter = require("./src/routes/AdvertRouter");
 const propertyRouter = require("./src/routes/propertyRouters.js/PropertyRouter");
 const propertyCategoryRouter = require("./src/routes/propertyRouters.js/PropertyCategoryRouter");
 const propertyItemRouter = require("./src/routes/propertyRouters.js/PropertyItemRouter");
+const userRouter = require("./src/routes/UserRouter");
+
 const port = 3000;
 const hostname = "127.0.0.1";
 
 app.use(bodyParser.json());
 
+app.use("/user", userRouter);
 app.use("/categories", categoryRouter);
 app.use("/adverts", advertRouter);
 app.use("/properties", propertyRouter);
