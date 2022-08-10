@@ -10,6 +10,7 @@ router.post(
 );
 router.post("/login", validate("loginSchema"), userController.loginController);
 router.post("/refreshToken", userController.refreshToken);
+router.post("/profile", userController.userProfile);
 router.delete("/logOut", userController.logOut);
 router.get("/verify/:id", userController.emailVerification);
 

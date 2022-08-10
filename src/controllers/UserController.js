@@ -5,18 +5,22 @@ const User = require("../models/User");
 const UserToken = require("../models/UserToken");
 const generateToken = require("../utils/generateToken");
 const sendEmail = require("../services/emailService");
+const errorResponse = require("../responses/errorResponse");
+const successResponse = require("../responses/succesResponse");
+const statusCode = require("http-status-codes").StatusCodes;
 
-const registerController = async(req, res) => {
+const registerController = async(req, res, next) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
+
     try {
         const user = new User({...req.body, password: hash });
         await user.save();
         const actionUrl = `${process.env.BASE_URL}/user/verify/${user.id}`;
         await sendEmail(user, "Email Doğrulama", actionUrl);
-        res.json({ message: "Email sent to your account please verify" });
+        successResponse(res, statusCode.OK, user);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
 
@@ -27,23 +31,21 @@ const loginController = async(req, res) => {
         const user = await User.findOne({ email });
 
         if (!user || user.verified === false) {
-            res.status(400).send({ message: "Invalid email or email not verified" });
-            return;
+            errorResponse(
+                res,
+                statusCode.BAD_REQUEST,
+                "Invalid email or email not verified"
+            );
         }
         const isValid = bcrypt.compareSync(password, user.password);
         console.log(isValid);
         if (!isValid) {
-            res.status(400).send({ message: "Invalid email or password" });
-            return;
+            errorResponse(res, statusCode.BAD_REQUEST, "Invalid email or password");
         }
         const token = await generateToken(user);
-        res.json({
-            accessToken: token.accessToken,
-            refreshToken: token.refreshToken,
-            err: token.err,
-        });
+        successResponse(res, statusCode.OK, token);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
 
@@ -62,11 +64,11 @@ const refreshToken = async(req, res) => {
                 const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN, {
                     expiresIn: "1h",
                 });
-                res.json({ accessToken: accessToken });
+                successResponse(res, statusCode.OK, { accessToken: accessToken });
             }
         );
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
 
@@ -75,9 +77,13 @@ const emailVerification = async(req, res) => {
         const user = await User.findById(req.params.id);
         if (!user) return res.status(400).send("Invalid link");
         await User.findByIdAndUpdate(user._id, { verified: true });
-        res.json({ message: "email doğrulandı sisteme giriş yapabilirsiniz" });
+        successResponse(
+            res,
+            statusCode.OK,
+            "email doğrulandı sisteme giriş yapabilirsiniz"
+        );
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
 
@@ -86,12 +92,20 @@ const logOut = async(req, res) => {
         const userToken = await UserToken.findOne({
             refreshToken: req.body.refreshToken,
         });
-
         userToken.remove();
-        res.json({ message: "Çıkış işlemi başarılı" });
+        successResponse(res, statusCode.OK, "Çıkış işlemi başarılı");
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
+};
+const userProfile = async(req, res) => {
+    try {
+        const userToken = await UserToken.findOne({
+            accessToken: req.body.accessToken,
+        });
+        const user = await User.findOne({ _id: userToken.userId });
+        successResponse(res, statusCode.OK, user);
+    } catch (error) {}
 };
 
 module.exports = {
@@ -100,4 +114,5 @@ module.exports = {
     refreshToken,
     logOut,
     emailVerification,
+    userProfile,
 };
