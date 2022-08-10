@@ -100,12 +100,11 @@ const logOut = async(req, res) => {
 };
 const userProfile = async(req, res) => {
     try {
-        const userToken = await UserToken.findOne({
-            accessToken: req.body.accessToken,
-        });
-        const user = await User.findOne({ _id: userToken.userId });
+        const user = await User.findOne({ _id: req.userId });
         successResponse(res, statusCode.OK, user);
-    } catch (error) {}
+    } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
 };
 
 module.exports = {
