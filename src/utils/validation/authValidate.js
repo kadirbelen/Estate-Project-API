@@ -13,6 +13,11 @@ const registerSchema = Joi.object({
         .error(stringPassswordError)
         .required(),
     role: Joi.string().valid("admin", "user"),
+    confirmPassword: Joi.any()
+        .valid(Joi.ref("password"))
+        .required()
+        .label("Confirm password")
+        .messages({ "any.only": "{{#label}} does not match" }),
 });
 
 const loginSchema = Joi.object({
