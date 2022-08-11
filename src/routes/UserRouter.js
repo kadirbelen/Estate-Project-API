@@ -11,7 +11,7 @@ router.post(
 );
 router.post("/login", validate("loginSchema"), userController.loginController);
 router.post("/refreshToken", userController.refreshToken);
-router.post(
+router.get(
     "/profile",
     authToken.verifyAndAuthorizationToken(["user"]),
     userController.userProfile
