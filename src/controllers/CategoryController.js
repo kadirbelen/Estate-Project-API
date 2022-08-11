@@ -1,5 +1,8 @@
 const Category = require("../models/Category");
 const genericController = require("./GenericController");
+const errorResponse = require("../responses/errorResponse");
+const successResponse = require("../responses/succesResponse");
+const statusCode = require("http-status-codes").StatusCodes;
 
 const categoryPost = async(req, res) => {
     await genericController.genericPost(req.body, res, Category);
@@ -24,9 +27,9 @@ const getSubCategory = async(req, res) => {
             array.push({ id: item._id, categoryName: item.categoryName });
         });
 
-        res.json(array);
+        successResponse(res, statusCode.OK, array);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
 

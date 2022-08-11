@@ -1,6 +1,5 @@
 var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
-require("dotenv/config");
 const User = require("../models/User");
 const UserToken = require("../models/UserToken");
 const generateToken = require("../utils/generateToken");
@@ -9,14 +8,14 @@ const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/succesResponse");
 const statusCode = require("http-status-codes").StatusCodes;
 
-const registerController = async(req, res, next) => {
+const registerController = async(req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
 
     try {
         const user = new User({...req.body, password: hash });
         await user.save();
-        const actionUrl = `${process.env.BASE_URL}/user/verify/${user.id}`;
+        const actionUrl = `${process.env.BASE_URL}user/verify/${user.id}`;
         await sendEmail(user, "Email Doğrulama", actionUrl);
         successResponse(res, statusCode.OK, user);
     } catch (error) {
@@ -36,11 +35,13 @@ const loginController = async(req, res) => {
                 statusCode.BAD_REQUEST,
                 "Invalid email or email not verified"
             );
+            return;
         }
         const isValid = bcrypt.compareSync(password, user.password);
         console.log(isValid);
         if (!isValid) {
             errorResponse(res, statusCode.BAD_REQUEST, "Invalid email or password");
+            return;
         }
         const token = await generateToken(user);
         successResponse(res, statusCode.OK, token);
@@ -54,12 +55,18 @@ const refreshToken = async(req, res) => {
         const userToken = await UserToken.findOne({
             refreshToken: req.body.refreshToken,
         });
-        if (!userToken) res.status(400).json({ error: "Token is not valid" });
+        if (!userToken) {
+            errorResponse(res, statusCode.BAD_REQUEST, "Token is not valid");
+            return;
+        }
         jwt.verify(
             req.body.refreshToken,
             process.env.JWT_REFRESH_TOKEN,
             (err, decoded) => {
-                if (err) res.status(403).json({ error: "Token is not valid" });
+                if (err) {
+                    errorResponse(res, statusCode.BAD_REQUEST, "Token is not valid");
+                    return;
+                }
                 const payload = { _id: decoded._id };
                 const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN, {
                     expiresIn: "1h",
@@ -75,7 +82,8 @@ const refreshToken = async(req, res) => {
 const emailVerification = async(req, res) => {
     try {
         const user = await User.findById(req.params.id);
-        if (!user) return res.status(400).send("Invalid link");
+        if (!user)
+            return errorResponse(res, statusCode.BAD_REQUEST, "Invalid link");
         await User.findByIdAndUpdate(user._id, { verified: true });
         successResponse(
             res,
@@ -90,7 +98,7 @@ const emailVerification = async(req, res) => {
 const logOut = async(req, res) => {
     try {
         const userToken = await UserToken.findOne({
-            refreshToken: req.body.refreshToken,
+            userId: req.userId,
         });
         userToken.remove();
         successResponse(res, statusCode.OK, "Çıkış işlemi başarılı");

@@ -13,7 +13,7 @@ const registerSchema = Joi.object({
         .error(stringPassswordError)
         .required(),
     role: Joi.string().valid("admin", "user"),
-    confirmPassword: Joi.any()
+    passwordConfirm: Joi.any()
         .valid(Joi.ref("password"))
         .required()
         .label("Confirm password")

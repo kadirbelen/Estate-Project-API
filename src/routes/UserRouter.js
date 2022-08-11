@@ -13,10 +13,14 @@ router.post("/login", validate("loginSchema"), userController.loginController);
 router.post("/refreshToken", userController.refreshToken);
 router.get(
     "/profile",
-    authToken.verifyAndAuthorizationToken(["user"]),
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
     userController.userProfile
 );
-router.delete("/logOut", userController.logOut);
+router.delete(
+    "/logOut",
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
+    userController.logOut
+);
 router.get("/verify/:id", userController.emailVerification);
 
 module.exports = router;
