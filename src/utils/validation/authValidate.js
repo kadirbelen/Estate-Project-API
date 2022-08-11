@@ -6,7 +6,7 @@ const stringPassswordError = new Error(
 );
 
 const registerSchema = Joi.object({
-    userName: Joi.string().required().min(3).max(255),
+    userName: Joi.string().required().min(3).max(50),
     email: Joi.string().required().email().min(6).max(255),
     password: Joi.string()
         .regex(RegExp(pattern))

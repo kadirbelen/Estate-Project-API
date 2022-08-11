@@ -1,0 +1,410 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "v1",
+    "title": "Bordo-Estate API",
+    "description": "Estate API",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://estate-bordo-55.herokuapp.com/",
+      "description": "heroku"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "User endpoints"
+    }
+  ],
+  "paths": {
+    "/user/login": {
+      "summary": "",
+      "description": "",
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Login",
+        "description": "Login Account",
+        "operationId": "users.login",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/login"
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/login"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "title": "Response status code",
+                      "description": "Response status code",
+                      "type": "string"
+                    },
+                    "error": {
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "UnprocessableEntity error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/paths/~1user~1login/post/responses/400/content/application~1json/schema"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "summary": "",
+      "description": "",
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Register",
+        "description": "Register Account",
+        "operationId": "users.register",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/register"
+        },
+        "responses": {
+          "200": {
+            "description": "Signin successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/login/allOf/0"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1user~1login/post/responses/400"
+          },
+          "422": {
+            "$ref": "#/paths/~1user~1login/post/responses/422"
+          }
+        }
+      }
+    },
+    "/user/profile": {
+      "summary": "",
+      "description": "",
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "User's profile",
+        "description": "User's profile",
+        "operationId": "users.profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "$ref": "#/components/schemas/profile"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1user~1login/post/responses/400"
+          },
+          "401": {
+            "description": "Unauthorized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/paths/~1user~1login/post/responses/400/content/application~1json/schema"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/paths/~1user~1login/post/responses/400/content/application~1json/schema"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/verify/{userId}": {
+      "summary": "",
+      "description": "",
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Email Verification",
+        "description": "Email Verification",
+        "operationId": "users.verify",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email Verification successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/login/allOf/0"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1user~1login/post/responses/400"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "requestBodies": {
+      "login": {
+        "description": "email and password required",
+        "content": {
+          "application/json": {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "title": "User email",
+                      "description": "User email",
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "password": {
+                      "title": "User password",
+                      "description": "User password",
+                      "type": "string",
+                      "minLength": 8,
+                      "example": "Kb12345*"
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "email",
+                    "password"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "register": {
+        "description": "Password must contain at least 1 lowercase letter, 1 uppercase letter and 1 special character and must be at least 8 characters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "allOf": [
+                {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "userName": {
+                          "title": "UserName",
+                          "description": "UserName",
+                          "type": "string",
+                          "minLength": 3
+                        },
+                        "email": {
+                          "title": "User email",
+                          "description": "User email",
+                          "type": "string",
+                          "format": "email"
+                        },
+                        "password": {
+                          "title": "User password",
+                          "description": "User password",
+                          "type": "string",
+                          "minLength": 8,
+                          "example": "Kb12345*"
+                        },
+                        "passwordConfirm": {
+                          "title": "User password confirm",
+                          "description": "User password confirm",
+                          "type": "string",
+                          "minLength": 8,
+                          "example": "Kb12345*"
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "userName",
+                        "email",
+                        "password",
+                        "passwordConfirm"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "login": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "statusCode": {
+                "title": "Response status code",
+                "description": "Response status code",
+                "type": "string"
+              },
+              "success": {
+                "title": "Response success status",
+                "description": "Response success status",
+                "type": "boolean",
+                "default": true
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "access_token": {
+                    "title": "JWT access token",
+                    "description": "JWT access token",
+                    "type": "string",
+                    "example": "eyJhbG7Il9pZCI6IjYyZW..."
+                  },
+                  "refresh_token": {
+                    "title": "JWT refresh token",
+                    "description": "JWT refresh token",
+                    "type": "string",
+                    "example": "eyJhbG7Il9pZCI6IjYyZW..."
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "profile": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/login/allOf/0"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "userName": {
+                    "title": "UserName",
+                    "description": "UserName",
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "email": {
+                    "title": "User email",
+                    "description": "User's email",
+                    "type": "string",
+                    "example": "deneme@gmail.com"
+                  },
+                  "password": {
+                    "title": "User password",
+                    "description": "User's password",
+                    "type": "string",
+                    "minLength": 8,
+                    "example": "Kb12345*"
+                  },
+                  "role": {
+                    "title": "User role",
+                    "description": "User's role",
+                    "type": "string"
+                  },
+                  "verified": {
+                    "title": "User verified",
+                    "description": "User's verified",
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "description": "JWT Authorization header using the Bearer scheme.",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

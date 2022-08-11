@@ -1,23 +1,19 @@
 const Advert = require("../models/Advert");
-const AdvertProperty = require("../models/AdvertProperty");
+const AdvertFeature = require("../models/AdvertFeature");
 const genericController = require("./GenericController");
+const errorResponse = require("../responses/errorResponse");
+const successResponse = require("../responses/succesResponse");
+const statusCode = require("http-status-codes").StatusCodes;
 
-// const advertPost = async(req, res) => {
-//     const advertProperty = await AdvertProperty(req.body.properties);
-//     await genericController.genericPost({...req.body, properties: advertProperty._id },
-//         res,
-//         Advert
-//     );
-// };
 const advertPost = async(req, res) => {
     try {
-        const advertProperty = await AdvertProperty(req.body.properties);
-        const advert = new Advert({...req.body, properties: advertProperty._id });
-        await advertProperty.save();
+        const advertFeature = await AdvertFeature(req.body.properties);
+        const advert = new Advert({...req.body, properties: advertFeature._id });
+        await advertFeature.save();
         await advert.save();
-        res.json(advert);
+        successResponse(res, statusCode.OK, advert);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
 
@@ -32,17 +28,12 @@ const advertDelete = async(req, res) => {
 const advertGetByCategory = async(req, res) => {
     try {
         console.log("id:", req.params.id);
-        // var pattern = `\^"${req.params.id}\"`;
         const advert = await Advert.find({
             categoryPath: { $regex: `\^${req.params.id}` },
         }).populate("properties");
-        // /^req.params.id$/i
-        // categoryPath: {
-        //     $in: [/^62eba4ac842c6ee14394ecdf#62eba4c9842c6ee14394ece5/],
-        // },
-        res.json(advert);
+        successResponse(res, statusCode.OK, advert);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
 

@@ -11,7 +11,6 @@ const statusCode = require("http-status-codes").StatusCodes;
 const registerController = async(req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
-
     try {
         const user = new User({...req.body, password: hash });
         await user.save();

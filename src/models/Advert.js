@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const AdvertProperty = require("./AdvertProperty");
+const AdvertFeatureSchema = require("./AdvertFeature");
 
 const AdvertSchema = new mongoose.Schema({
     image: [{
@@ -18,10 +18,6 @@ const AdvertSchema = new mongoose.Schema({
     categoryPath: {
         type: String,
         required: true,
-    },
-    properties: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "AdvertProperty",
     },
 }, {
     versionKey: false,
