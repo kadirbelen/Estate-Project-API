@@ -18,11 +18,13 @@ function verifyToken(req, res, next) {
 
         const token = authorization.split(" ")[1];
         console.log(token);
-
-        jwt.verify(token, process.env.JWT_TOKEN, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_ACCESS_TOKEN, (err, decoded) => {
+            console.log("decoded", decoded);
+            if (err) {
+                errorResponse(res, statusCode.UNAUTHORIZED, err.message);
+                return;
+            }
             req.userId = decoded._id;
-            if (err)
-                errorResponse(res, statusCode.UNAUTHORIZED, "Token is not valid");
             next();
         });
     } catch (error) {
