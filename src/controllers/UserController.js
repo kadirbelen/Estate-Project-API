@@ -5,8 +5,9 @@ const UserToken = require("../models/UserToken");
 const generateToken = require("../utils/generateToken");
 const sendEmail = require("../services/emailService");
 const errorResponse = require("../responses/errorResponse");
-const successResponse = require("../responses/succesResponse");
+const successResponse = require("../responses/successResponse");
 const statusCode = require("http-status-codes").StatusCodes;
+const genericController = require("./GenericController");
 
 const registerController = async(req, res) => {
     const salt = bcrypt.genSaltSync(10);
@@ -37,6 +38,8 @@ const loginController = async(req, res) => {
             return;
         }
         const isValid = bcrypt.compareSync(password, user.password);
+        console.log("ps", password);
+        console.log("up", user.password);
         console.log(isValid);
         if (!isValid) {
             errorResponse(res, statusCode.BAD_REQUEST, "Invalid email or password");
@@ -80,10 +83,11 @@ const refreshToken = async(req, res) => {
 
 const emailVerification = async(req, res) => {
     try {
-        const user = await User.findById(req.params.id);
-        if (!user)
-            return errorResponse(res, statusCode.BAD_REQUEST, "Invalid link");
-        await User.findByIdAndUpdate(user._id, { verified: true });
+        //TODO:Gereksiz query
+        // const user = await User.findById(req.params.id);
+        // if (!user)
+        //     return errorResponse(res, statusCode.BAD_REQUEST, "Invalid link");
+        await User.findByIdAndUpdate(req.params.id, { verified: true });
         successResponse(
             res,
             statusCode.OK,
@@ -94,7 +98,7 @@ const emailVerification = async(req, res) => {
     }
 };
 
-const logOut = async(req, res) => {
+const logout = async(req, res) => {
     try {
         const userToken = await UserToken.findOne({
             userId: req.userId,
@@ -113,12 +117,41 @@ const userProfile = async(req, res) => {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
+////????
+const userUpdate = async(req, res) => {
+    await genericController.genericUpdate(req.userId, res, User);
+};
+
+const userPasswordUpdate = async(req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+        const user = await User.findOne({ _id: req.userId });
+        console.log("id", req.userId);
+        const isValid = bcrypt.compareSync(oldPassword, user.password);
+        console.log(isValid);
+        if (!isValid) {
+            errorResponse(res, statusCode.BAD_REQUEST, "old password is not valid");
+            return;
+        }
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(newPassword, salt);
+        const updateUser = await User.findByIdAndUpdate(req.userId, {
+            password: hash,
+        });
+
+        successResponse(res, statusCode.OK, updateUser);
+    } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
+};
 
 module.exports = {
     loginController,
     registerController,
     refreshToken,
-    logOut,
+    logout,
     emailVerification,
     userProfile,
+    userUpdate,
+    userPasswordUpdate,
 };

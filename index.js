@@ -3,11 +3,11 @@ const app = express();
 const bodyParser = require("body-parser");
 const connection = require("./src/services/dbConnection");
 const categoryRouter = require("./src/routes/CategoryRouter");
-const advertRouter = require("./src/routes/AdvertRouter");
-const featureRouter = require("./src/routes/featureRouters/FeatureRouter");
-const featureCategoryRouter = require("./src/routes/featureRouters/FeatureCategoryRouter");
-const featureItemRouter = require("./src/routes/featureRouters/FeatureItemRouter");
+const advertHousingRouter = require("./src/routes/AdvertHousingRouter");
+const advertWorkPlaceRouter = require("./src/routes/AdvertWorkPlaceRouter");
+const featureRouter = require("./src/routes/FeatureRouter");
 const userRouter = require("./src/routes/UserRouter");
+const addressRouter = require("./src/routes/AddressRouter");
 const swaggerUi = require("swagger-ui-express");
 var cors = require("cors");
 const swaggerFile = require("./static/openapi.json");
@@ -22,11 +22,10 @@ app.use(bodyParser.json());
 
 app.use("/user", userRouter);
 app.use("/categories", categoryRouter);
-app.use("/adverts", advertRouter);
+app.use("/location", addressRouter);
+app.use("/advertHousing", advertHousingRouter);
+app.use("/advertWorkPlace", advertWorkPlaceRouter);
 app.use("/features", featureRouter);
-app.use("/featureCategoires", featureCategoryRouter);
-app.use("/featureItems", featureItemRouter);
-
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 
 app.listen(process.env.PORT || 3000, function() {

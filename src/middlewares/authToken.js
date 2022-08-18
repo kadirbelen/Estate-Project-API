@@ -34,17 +34,22 @@ function verifyToken(req, res, next) {
 
 function verifyAndAuthorizationToken(roles) {
     try {
+        console.log("roles", roles);
         return (req, res, next) => {
             verifyToken(req, res, async() => {
                 const user = await User.findById(req.userId);
-                if (roles.includes(user.role)) {
-                    next();
-                } else {
-                    errorResponse(
-                        res,
-                        statusCode.FORBIDDEN,
-                        "You don't have permission for this action"
-                    );
+                console.log("user", user);
+
+                for (let i = 0; i < roles.length; i++) {
+                    if (roles[i].includes(user.role)) {
+                        next();
+                    } else {
+                        errorResponse(
+                            res,
+                            statusCode.FORBIDDEN,
+                            "You don't have permission for this action"
+                        );
+                    }
                 }
             });
         };

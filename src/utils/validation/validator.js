@@ -1,9 +1,11 @@
-const authSchema = require("./authValidate");
+const userSchema = require("./userValidate");
 
-const loginSchema = authSchema.loginSchema;
-const registerSchema = authSchema.registerSchema;
+const loginSchema = userSchema.loginSchema;
+const registerSchema = userSchema.registerSchema;
+const passwordChangeSchema = userSchema.passwordChangeSchema;
 
 module.exports = {
     loginSchema,
     registerSchema,
+    passwordChangeSchema,
 };

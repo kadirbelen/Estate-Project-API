@@ -25,4 +25,17 @@ const loginSchema = Joi.object({
     password: Joi.string().required(),
 });
 
-module.exports = { registerSchema, loginSchema };
+const passwordChangeSchema = Joi.object({
+    oldPassword: Joi.string().required(),
+    newPassword: Joi.string()
+        .regex(RegExp(pattern))
+        .error(stringPassswordError)
+        .required(),
+    newPasswordConfirm: Joi.any()
+        .valid(Joi.ref("newPassword"))
+        .required()
+        .label("Confirm password")
+        .messages({ "any.only": "{{#label}} does not match" }),
+});
+
+module.exports = { registerSchema, loginSchema, passwordChangeSchema };

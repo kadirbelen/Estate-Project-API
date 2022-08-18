@@ -17,10 +17,22 @@ router.get(
     userController.userProfile
 );
 router.delete(
-    "/logOut",
+    "/logout",
     authToken.verifyAndAuthorizationToken(["user,admin"]),
-    userController.logOut
+    userController.logout
 );
 router.get("/verify/:id", userController.emailVerification);
+
+router.put(
+    "/updateUser",
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
+    userController.userUpdate
+);
+router.put(
+    "/updatePassword",
+    validate("passwordChangeSchema"),
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
+    userController.userPasswordUpdate
+);
 
 module.exports = router;
