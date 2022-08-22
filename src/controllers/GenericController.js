@@ -1,6 +1,7 @@
 const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 const statusCode = require("http-status-codes").StatusCodes;
+const Advert = require("../models/advertModels/Advert");
 var fs = require("fs");
 
 const genericGet = async(req, res, model) => {
@@ -51,7 +52,7 @@ const genericUpdate = async(req, res, model) => {
     }
 };
 
-const genericDelete = async(req, res) => {
+const genericDelete = async(req, res, model) => {
     try {
         await model.findByIdAndRemove(req.params.id);
         successResponse(res, statusCode.OK, "ürün silindi");
@@ -60,19 +61,33 @@ const genericDelete = async(req, res) => {
     }
 };
 
-const genericAdvertPost = async(req, res, model) => {
+const genericAdvertPost = async(req, res, model, ref, type) => {
     const images = [];
     try {
-        for (let i = 0; i < req.files.length; i++) {
-            images.push({ path: req.files[i].path });
-        }
-        const advert = new model({...req.body, images: images });
+        console.log("req", req);
+        console.log("body", req.body);
+        console.log("files", req.files);
+        req.files.map((item) => {
+            images.push({ path: item.path });
+        });
+        const advert = new model({
+            ...req.body,
+            images: images,
+            user: req.userId,
+        });
         if (!advert) {
             images.map((item) => {
                 fs.unlinkSync(item.path);
             });
+            return errorResponse(res, statusCode.BAD_REQUEST, error.message);
         }
         await advert.save();
+        const baseAdvert = new Advert({
+            advert: advert._id,
+            type: type,
+            dynamicModel: ref,
+        });
+        await baseAdvert.save();
         successResponse(res, statusCode.OK, advert);
     } catch (error) {
         images.map((item) => {

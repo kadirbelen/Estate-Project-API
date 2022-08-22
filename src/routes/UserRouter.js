@@ -13,7 +13,7 @@ router.post("/login", validate("loginSchema"), userController.loginController);
 router.post("/refreshToken", userController.refreshToken);
 router.get(
     "/profile",
-    authToken.verifyAndAuthorizationToken(["user,admin"]),
+    authToken.verifyAndAuthorizationToken(["admin,user"]),
     userController.userProfile
 );
 router.delete(

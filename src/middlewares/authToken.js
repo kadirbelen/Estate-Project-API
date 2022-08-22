@@ -51,6 +51,15 @@ function verifyAndAuthorizationToken(roles) {
                         );
                     }
                 }
+                //                 if (user.role.includes(roles)) {
+                //                     next();
+                //                 } else {
+                //                     errorResponse(
+                //                         res,
+                //                         statusCode.FORBIDDEN,
+                //                         "You don't have permission for this action"
+                //                     );
+                //                 }
             });
         };
     } catch (error) {
@@ -59,3 +68,15 @@ function verifyAndAuthorizationToken(roles) {
 }
 
 module.exports = { verifyToken, verifyAndAuthorizationToken };
+
+// for (let i = 0; i < roles.length; i++) {
+//     if (roles[i].includes(user.role)) {
+//         next();
+//     } else {
+//         errorResponse(
+//             res,
+//             statusCode.FORBIDDEN,
+//             "You don't have permission for this action"
+//         );
+//     }
+// }

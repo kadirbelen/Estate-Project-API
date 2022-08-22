@@ -5,6 +5,8 @@ const connection = require("./src/services/dbConnection");
 const categoryRouter = require("./src/routes/CategoryRouter");
 const advertHousingRouter = require("./src/routes/AdvertHousingRouter");
 const advertWorkPlaceRouter = require("./src/routes/AdvertWorkPlaceRouter");
+const advertLandRouter = require("./src/routes/AdvertLandRouter");
+const advertRouter = require("./src/routes/AdvertRouter");
 const featureRouter = require("./src/routes/FeatureRouter");
 const userRouter = require("./src/routes/UserRouter");
 const addressRouter = require("./src/routes/AddressRouter");
@@ -19,12 +21,16 @@ app.use(
     })
 );
 app.use(bodyParser.json());
+// app.use(bodyParser.json({ limit: "50mb" }));
+// app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 app.use("/user", userRouter);
 app.use("/categories", categoryRouter);
 app.use("/location", addressRouter);
 app.use("/advertHousing", advertHousingRouter);
 app.use("/advertWorkPlace", advertWorkPlaceRouter);
+app.use("/advertLand", advertLandRouter);
+app.use("/advert", advertRouter);
 app.use("/features", featureRouter);
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 

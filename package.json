@@ -16,6 +16,7 @@
         "http-status-codes": "^2.2.0",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^6.5.0",
+        "mongoose-autopopulate": "^0.16.1",
         "mongoose-extend-schema": "^1.0.0",
         "mongoose-materialized": "^0.2.0",
         "mongoose-mpath": "^2.4.13",
