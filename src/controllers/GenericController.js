@@ -2,7 +2,7 @@ const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 const statusCode = require("http-status-codes").StatusCodes;
 const Advert = require("../models/advertModels/Advert");
-var fs = require("fs");
+const ImageTemporary = require("../models/ImageTemporary");
 
 const genericGet = async(req, res, model) => {
     try {
@@ -62,25 +62,29 @@ const genericDelete = async(req, res, model) => {
 };
 
 const genericAdvertPost = async(req, res, model, ref, type) => {
-    const images = [];
     try {
-        console.log("req", req);
-        console.log("body", req.body);
-        console.log("files", req.files);
-        req.files.map((item) => {
-            images.push({ path: item.path });
-        });
+        var images = [];
+        for (const item of req.body.images) {
+            const temporary = await ImageTemporary.findOne({ remoteId: item });
+            if (!temporary) {
+                return errorResponse(
+                    res,
+                    statusCode.BAD_REQUEST,
+                    `${item} Image not defined`
+                );
+            }
+            images.push({
+                remoteId: temporary.remoteId,
+                url: temporary.url,
+                name: temporary.name,
+            });
+            await ImageTemporary.findByIdAndRemove(temporary._id);
+        }
         const advert = new model({
             ...req.body,
             images: images,
             user: req.userId,
         });
-        if (!advert) {
-            images.map((item) => {
-                fs.unlinkSync(item.path);
-            });
-            return errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
         await advert.save();
         const baseAdvert = new Advert({
             advert: advert._id,
@@ -90,13 +94,49 @@ const genericAdvertPost = async(req, res, model, ref, type) => {
         await baseAdvert.save();
         successResponse(res, statusCode.OK, advert);
     } catch (error) {
-        images.map((item) => {
-            console.log("p", item.path);
-            fs.unlinkSync(item.path);
-        });
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
+
+// const genericAdvertPost = async(req, res, model, ref, type) => {
+//     try {
+//         const images = await driveService.publicUrl(req, res);
+//         console.log("img", images);
+//         const advert = new model({
+//             ...req.body,
+//             images: images,
+//             user: req.userId,
+//         });
+//         await advert.save();
+//         const baseAdvert = new Advert({
+//             advert: advert._id,
+//             type: type,
+//             dynamicModel: ref,
+//         });
+//         await baseAdvert.save();
+//         successResponse(res, statusCode.OK, advert);
+//     } catch (error) {
+//         errorResponse(res, statusCode.BAD_REQUEST, error.message);
+//     }
+// };
+
+// for (const item of req.body.images) {
+//     console.log("item", item);
+//     const temporary = await ImageTemporary.findOne({ remoteId: item });
+//     if (!temporary) {
+//         return errorResponse(
+//             res,
+//             statusCode.BAD_REQUEST,
+//             `${item} Image not defined`
+//         );
+//     }
+//     images.push({
+//         remoteId: temporary.remoteId,
+//         url: temporary.url,
+//         name: temporary.name,
+//     });
+//     await ImageTemporary.findByIdAndRemove(temporary._id);
+// }
 
 module.exports = {
     genericDelete,

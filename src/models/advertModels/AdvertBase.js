@@ -5,10 +5,12 @@ const AdvertBaseSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        autopopulate: true,
+        autopopulate: { select: "-password" },
     },
     images: [{
-        path: { type: String, required: true },
+        remoteId: { type: String, required: true },
+        url: { type: String, required: true },
+        name: { type: String, required: true },
     }, ],
     title: { type: String, default: true, min: 10, max: 100 },
     description: { type: String, required: true, min: 30, max: 500 },

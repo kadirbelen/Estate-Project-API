@@ -620,7 +620,7 @@
                               "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
                             },
                             {
-                              "$ref": "#/paths/~1advertHousing/post/requestBody/content/multipart~1form-data/schema/allOf/1/properties/address/allOf/0"
+                              "$ref": "#/paths/~1advertHousing/post/requestBody/content/application~1json/schema/allOf/1/properties/address/allOf/0"
                             }
                           ]
                         }
@@ -677,7 +677,7 @@
                               "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
                             },
                             {
-                              "$ref": "#/paths/~1advertHousing/post/requestBody/content/multipart~1form-data/schema/allOf/1/properties/address/allOf/1"
+                              "$ref": "#/paths/~1advertHousing/post/requestBody/content/application~1json/schema/allOf/1/properties/address/allOf/1"
                             }
                           ]
                         }
@@ -711,7 +711,7 @@
         "requestBody": {
           "description": "advert housing",
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
                 "allOf": [
                   {
@@ -720,21 +720,172 @@
                       "images": {
                         "type": "array",
                         "items": {
-                          "title": "advert images",
-                          "description": "advert images",
+                          "title": "Advert image id",
+                          "description": "Advert image id",
                           "type": "string",
-                          "format": "binary"
+                          "example": "62ed69679c045c97a63390a4"
                         }
                       }
                     }
                   },
                   {
                     "type": "object",
-                    "$ref": "#/paths/~1advertHousing/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/2"
+                    "properties": {
+                      "title": {
+                        "title": "Advert title",
+                        "description": "Advert title",
+                        "type": "string",
+                        "example": "example"
+                      },
+                      "description": {
+                        "title": "Advert description",
+                        "description": "Advert description",
+                        "type": "string",
+                        "example": "example"
+                      },
+                      "price": {
+                        "title": "Advert price",
+                        "description": "Advert price",
+                        "type": "number",
+                        "example": "250000"
+                      },
+                      "squareMeters": {
+                        "title": "Advert squareMeters",
+                        "description": "Advert squareMeters",
+                        "type": "number",
+                        "example": 150
+                      },
+                      "categoryPath": {
+                        "title": "Advert category path",
+                        "description": "Advert category path",
+                        "type": "string",
+                        "example": "62ed69679c045c97a63390a4,62ed69679c045c97a63390a4,62ed69679c045c97a63390a4"
+                      },
+                      "address": {
+                        "allOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "city": {
+                                "title": "City ref mongoDb id",
+                                "description": "City ref mongoDb id",
+                                "type": "string",
+                                "example": "62ed69679c045c97a63390a4"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "district": {
+                                "title": "District ref mongoDb id",
+                                "description": "District ref mongoDb id",
+                                "type": "string",
+                                "example": "62ed69679c045c97a63390a4"
+                              }
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "town": {
+                                "title": "Town ref mongoDb id",
+                                "description": "Town ref mongoDb id",
+                                "type": "string",
+                                "example": "62ed69679c045c97a63390a4"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
                   },
                   {
-                    "type": "object",
-                    "$ref": "#/paths/~1advertHousing/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/3"
+                    "allOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "roomCount": {
+                            "title": "Advert room count",
+                            "description": "Advert room count",
+                            "type": "string",
+                            "example": "2+1"
+                          },
+                          "netSquareMeters": {
+                            "title": "Advert net m^2",
+                            "description": "Advert net m^2",
+                            "type": "number",
+                            "example": 150
+                          },
+                          "buildingAge": {
+                            "title": "Advert building age ",
+                            "description": "Advert building age",
+                            "type": "string",
+                            "example": 5
+                          },
+                          "floor": {
+                            "title": "Advert building floor ",
+                            "description": "Advert building floor",
+                            "type": "number",
+                            "example": 2
+                          },
+                          "heatingType": {
+                            "title": "Advert heating type",
+                            "description": "Advert heating type",
+                            "type": "string",
+                            "example": "example"
+                          },
+                          "itemStatus": {
+                            "title": "Advert furniture status",
+                            "description": "Advert furniture status",
+                            "type": "string",
+                            "example": "eşyalı"
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "interiorFeatures": {
+                            "type": "array",
+                            "items": {
+                              "title": "Advert interior features",
+                              "description": "Advert interior features",
+                              "type": "string",
+                              "example": "62ed69679c045c97a63390a4"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "externalFeatures": {
+                            "type": "array",
+                            "items": {
+                              "title": "Advert external features",
+                              "description": "Advert external features",
+                              "type": "string",
+                              "example": "62ed69679c045c97a63390a4"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "locationFeatures": {
+                            "type": "array",
+                            "items": {
+                              "title": "Advert location features",
+                              "description": "Advert location features",
+                              "type": "string",
+                              "example": "62ed69679c045c97a63390a4"
+                            }
+                          }
+                        }
+                      }
+                    ]
                   }
                 ]
               }
@@ -776,10 +927,29 @@
                                   "items": {
                                     "type": "object",
                                     "properties": {
-                                      "path": {
-                                        "title": "advert image path",
-                                        "description": "advert image path",
-                                        "type": "string"
+                                      "remoteId": {
+                                        "title": "advert image remote id",
+                                        "description": "advert image remote id",
+                                        "type": "string",
+                                        "example": "1ZLbwUBucwCK0NIcWQEQZabU58wL8erNw"
+                                      },
+                                      "url": {
+                                        "title": "advert image url",
+                                        "description": "advert image url",
+                                        "type": "string",
+                                        "example": "https://drive.google.com/uc?id=1ZLbwUBucwCK0NIcWQEQZabU58wL8erNw"
+                                      },
+                                      "name": {
+                                        "title": "advert image name",
+                                        "description": "advert image name",
+                                        "type": "string",
+                                        "example": "1661326388828-devere.png"
+                                      },
+                                      "_id": {
+                                        "title": "advert image id",
+                                        "description": "advert image id",
+                                        "type": "string",
+                                        "example": "6305d4431b751789052a4a9c"
                                       }
                                     }
                                   }
@@ -787,169 +957,148 @@
                               }
                             },
                             {
-                              "type": "object",
-                              "properties": {
-                                "title": {
-                                  "title": "Advert title",
-                                  "description": "Advert title",
-                                  "type": "string",
-                                  "example": "example"
-                                },
-                                "description": {
-                                  "title": "Advert description",
-                                  "description": "Advert description",
-                                  "type": "string",
-                                  "example": "example"
-                                },
-                                "price": {
-                                  "title": "Advert price",
-                                  "description": "Advert price",
-                                  "type": "number",
-                                  "example": "250000"
-                                },
-                                "squareMeters": {
-                                  "title": "Advert squareMeters",
-                                  "description": "Advert squareMeters",
-                                  "type": "number",
-                                  "example": 150
-                                },
-                                "categoryPath": {
-                                  "title": "Advert category path",
-                                  "description": "Advert category path",
-                                  "type": "string",
-                                  "example": "62ed69679c045c97a63390a4,62ed69679c045c97a63390a4,62ed69679c045c97a63390a4"
-                                },
-                                "address": {
-                                  "allOf": [
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "city": {
-                                          "title": "City ref mongoDb id",
-                                          "description": "City ref mongoDb id",
-                                          "type": "string",
-                                          "example": "62ed69679c045c97a63390a4"
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "district": {
-                                          "title": "District ref mongoDb id",
-                                          "description": "District ref mongoDb id",
-                                          "type": "string",
-                                          "example": "62ed69679c045c97a63390a4"
-                                        }
-                                      }
-                                    },
-                                    {
-                                      "type": "object",
-                                      "properties": {
-                                        "town": {
-                                          "title": "Town ref mongoDb id",
-                                          "description": "Town ref mongoDb id",
-                                          "type": "string",
-                                          "example": "62ed69679c045c97a63390a4"
-                                        }
-                                      }
-                                    }
-                                  ]
-                                }
-                              }
+                              "$ref": "#/paths/~1advertHousing/post/requestBody/content/application~1json/schema/allOf/1"
                             },
                             {
-                              "allOf": [
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "roomCount": {
-                                      "title": "Advert room count",
-                                      "description": "Advert room count",
-                                      "type": "string",
-                                      "example": "2+1"
-                                    },
-                                    "netSquareMeters": {
-                                      "title": "Advert net m^2",
-                                      "description": "Advert net m^2",
-                                      "type": "number",
-                                      "example": 150
-                                    },
-                                    "buildingAge": {
-                                      "title": "Advert building age ",
-                                      "description": "Advert building age",
-                                      "type": "string",
-                                      "example": 5
-                                    },
-                                    "floor": {
-                                      "title": "Advert building floor ",
-                                      "description": "Advert building floor",
-                                      "type": "number",
-                                      "example": 2
-                                    },
-                                    "heatingType": {
-                                      "title": "Advert heating type",
-                                      "description": "Advert heating type",
-                                      "type": "string",
-                                      "example": "example"
-                                    },
-                                    "itemStatus": {
-                                      "title": "Advert furniture status",
-                                      "description": "Advert furniture status",
-                                      "type": "string",
-                                      "example": "eşyalı"
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "interiorFeatures": {
-                                      "type": "array",
-                                      "items": {
-                                        "title": "Advert interior features",
-                                        "description": "Advert interior features",
-                                        "type": "string",
-                                        "example": "62ed69679c045c97a63390a4"
-                                      }
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "externalFeatures": {
-                                      "type": "array",
-                                      "items": {
-                                        "title": "Advert external features",
-                                        "description": "Advert external features",
-                                        "type": "string",
-                                        "example": "62ed69679c045c97a63390a4"
-                                      }
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "locationFeatures": {
-                                      "type": "array",
-                                      "items": {
-                                        "title": "Advert location features",
-                                        "description": "Advert location features",
-                                        "type": "string",
-                                        "example": "62ed69679c045c97a63390a4"
-                                      }
-                                    }
-                                  }
-                                }
-                              ]
+                              "$ref": "#/paths/~1advertHousing/post/requestBody/content/application~1json/schema/allOf/2"
                             }
                           ]
                         }
                       }
                     }
                   ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1categories/get/responses/400"
+          },
+          "401": {
+            "$ref": "#/paths/~1user~1profile/get/responses/401"
+          },
+          "403": {
+            "$ref": "#/paths/~1user~1profile/get/responses/403"
+          }
+        }
+      }
+    },
+    "/advert/image/upload": {
+      "summary": "",
+      "description": "",
+      "post": {
+        "tags": [
+          "Adverts"
+        ],
+        "summary": "Advert image post",
+        "description": "Advert image post",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "advert image upload",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "image": {
+                        "title": "advert image",
+                        "description": "advert image",
+                        "type": "string",
+                        "format": "binary"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/login/allOf/0"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "title": "Advert image id",
+                                  "description": "Advert image id",
+                                  "type": "string",
+                                  "example": "62ed69679c045c97a63390a4"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1categories/get/responses/400"
+          },
+          "401": {
+            "$ref": "#/paths/~1user~1profile/get/responses/401"
+          },
+          "403": {
+            "$ref": "#/paths/~1user~1profile/get/responses/403"
+          }
+        }
+      }
+    },
+    "/advert/image/{remoteId}": {
+      "summary": "",
+      "description": "",
+      "delete": {
+        "tags": [
+          "Adverts"
+        ],
+        "summary": "Advert image delete",
+        "description": "Advert image delete",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "remoteId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Log out successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/login/allOf/0"
                 }
               }
             }

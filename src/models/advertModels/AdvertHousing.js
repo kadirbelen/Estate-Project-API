@@ -32,7 +32,7 @@ const AdvertHousingSchema = extendSchema(
     }
 );
 
-AdvertHousingSchema.plugin(autopopulate);
-// AdvertHousingSchema.plugin(autopopulate, { functions: ["findOne"] });
+// AdvertHousingSchema.plugin(autopopulate);
+AdvertHousingSchema.plugin(autopopulate, { functions: ["findOne", "find"] });
 const model = mongoose.model("AdvertHousing", AdvertHousingSchema);
 module.exports = { model, AdvertHousingSchema };
