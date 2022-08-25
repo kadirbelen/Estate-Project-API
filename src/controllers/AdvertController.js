@@ -1,11 +1,42 @@
-const errorResponse = require("../../responses/errorResponse");
-const successResponse = require("../../responses/successResponse");
+const AdvertHousing = require("../models/advertModels/AdvertHousing").model;
+const AdvertLand = require("../models/advertModels/AdvertLand");
+const AdvertWorkPlace = require("../models/advertModels/AdvertWorkPlace");
+const errorResponse = require("../responses/errorResponse");
+const successResponse = require("../responses/successResponse");
 const statusCode = require("http-status-codes").StatusCodes;
-const Advert = require("../../models/advertModels/Advert");
-const genericController = require("../GenericController");
+const Advert = require("../models/advertModels/Advert");
+const genericController = require("./GenericController");
 const mongoose = require("mongoose");
-const ImageTemporary = require("../../models/ImageTemporary");
-const driveService = require("../../services/googleDriveService");
+
+const advertHousingPost = async(req, res) => {
+    await genericController.genericAdvertPost(
+        req,
+        res,
+        AdvertHousing,
+        "AdvertHousing",
+        "Konut"
+    );
+};
+
+const advertLandPost = async(req, res) => {
+    await genericController.genericAdvertPost(
+        req,
+        res,
+        AdvertLand,
+        "AdvertLand",
+        "Arsa"
+    );
+};
+
+const advertWorkPlacePost = async(req, res) => {
+    await genericController.genericAdvertPost(
+        req,
+        res,
+        AdvertWorkPlace,
+        "AdvertWorkPlace",
+        "İş Yeri"
+    );
+};
 
 const advertGetById = async(req, res) => {
     try {
@@ -13,6 +44,19 @@ const advertGetById = async(req, res) => {
             "advert"
         );
         successResponse(res, statusCode.OK, advert);
+    } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
+};
+
+const advertGetByCategory = async(req, res) => {
+    try {
+        const advert = await Advert.find({}).populate({
+            path: "advert",
+        });
+        var regex = new RegExp(`\^${req.params.categoryPath}`);
+        var result = advert.filter((item) => item.advert.categoryPath.match(regex));
+        successResponse(res, statusCode.OK, result);
     } catch (error) {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
@@ -42,22 +86,7 @@ const advertDelete = async(req, res) => {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
-// .populate({
-//     path: "advert",
-//     populate: {
-//         path: "address",
-//         populate: [{
-//                 path: "city",
-//             },
-//             {
-//                 path: "district",
-//             },
-//             {
-//                 path: "town",
-//             },
-//         ],
-//     },
-// });
+
 //pagination will be added
 const advertGetAll = async(req, res) => {
     try {
@@ -77,41 +106,19 @@ const advertGetAll = async(req, res) => {
                 type: item.type,
             });
         });
-        successResponse(res, statusCode.OK, advert);
-    } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
-    }
-};
-
-const advertImagePost = async(req, res) => {
-    try {
-        const image = await driveService.publicUrl(req, res);
-        const temporary = new ImageTemporary(image);
-        temporary.save();
-        successResponse(res, statusCode.OK, { remoteId: temporary.remoteId });
-    } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
-    }
-};
-
-const advertImageDelete = async(req, res) => {
-    try {
-        console.log("idi", req.params.remoteId);
-        await driveService.deleteFile(req, res);
-        await ImageTemporary.findOneAndRemove({
-            remoteId: req.params.remoteId,
-        });
-        successResponse(res, statusCode.OK);
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
 
 module.exports = {
+    advertHousingPost,
+    advertLandPost,
+    advertWorkPlacePost,
     advertGetById,
     advertGetAll,
     advertUpdate,
     advertDelete,
-    advertImagePost,
-    advertImageDelete,
+    advertGetByCategory,
 };
