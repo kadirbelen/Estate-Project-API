@@ -19,13 +19,18 @@ router.post(
     authToken.verifyAndAuthorizationToken(["user"]),
     advertController.advertWorkPlacePost
 );
-router.get("/:id", advertController.advertGetById);
-router.get("/", advertController.advertGetAll);
+
+router.get("/getById/:id", advertController.advertGetById);
+router.get("/getAll", advertController.advertGetAll);
 router.patch("/:id", advertController.advertUpdate);
 router.delete("/:id", advertController.advertDelete);
 router.get(
     "/getAdvertByCategory/:categoryPath",
     advertController.advertGetByCategory
 );
-
+router.get(
+    "/getByUser",
+    authToken.verifyAndAuthorizationToken(["user"]),
+    advertController.advertGetByUser
+);
 module.exports = router;

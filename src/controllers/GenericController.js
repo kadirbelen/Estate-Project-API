@@ -98,46 +98,6 @@ const genericAdvertPost = async(req, res, model, ref, type) => {
     }
 };
 
-// const genericAdvertPost = async(req, res, model, ref, type) => {
-//     try {
-//         const images = await driveService.publicUrl(req, res);
-//         console.log("img", images);
-//         const advert = new model({
-//             ...req.body,
-//             images: images,
-//             user: req.userId,
-//         });
-//         await advert.save();
-//         const baseAdvert = new Advert({
-//             advert: advert._id,
-//             type: type,
-//             dynamicModel: ref,
-//         });
-//         await baseAdvert.save();
-//         successResponse(res, statusCode.OK, advert);
-//     } catch (error) {
-//         errorResponse(res, statusCode.BAD_REQUEST, error.message);
-//     }
-// };
-
-// for (const item of req.body.images) {
-//     console.log("item", item);
-//     const temporary = await ImageTemporary.findOne({ remoteId: item });
-//     if (!temporary) {
-//         return errorResponse(
-//             res,
-//             statusCode.BAD_REQUEST,
-//             `${item} Image not defined`
-//         );
-//     }
-//     images.push({
-//         remoteId: temporary.remoteId,
-//         url: temporary.url,
-//         name: temporary.name,
-//     });
-//     await ImageTemporary.findByIdAndRemove(temporary._id);
-// }
-
 module.exports = {
     genericDelete,
     genericPost,

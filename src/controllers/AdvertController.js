@@ -7,6 +7,7 @@ const statusCode = require("http-status-codes").StatusCodes;
 const Advert = require("../models/advertModels/Advert");
 const genericController = require("./GenericController");
 const mongoose = require("mongoose");
+const pagination = require("../utils/pagination");
 
 const advertHousingPost = async(req, res) => {
     await genericController.genericAdvertPost(
@@ -39,11 +40,28 @@ const advertWorkPlacePost = async(req, res) => {
 };
 
 const advertGetById = async(req, res) => {
+    await genericController.genericGetByQueryPopulate(
+        req,
+        res,
+        Advert, {
+            advert: req.params.id,
+        }, ["advert"]
+    );
+};
+
+const advertGetAll = async(req, res) => {
     try {
-        const advert = await Advert.findOne({ advert: req.params.id }).populate(
-            "advert"
-        );
-        successResponse(res, statusCode.OK, advert);
+        const advert = await Advert.find().populate("advert");
+        const { error, pageList, page, pageSize } = await pagination(advert, req);
+        if (error) {
+            return errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        }
+        const data = await advertCard(res, pageList);
+        successResponse(res, statusCode.OK, {
+            data,
+            currentPage: page,
+            totalPage: Math.ceil(advert.length / pageSize),
+        });
     } catch (error) {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
@@ -51,13 +69,42 @@ const advertGetById = async(req, res) => {
 
 const advertGetByCategory = async(req, res) => {
     try {
-        const advert = await Advert.find({}).populate({
-            path: "advert",
-        });
+        const advert = await Advert.find().populate("advert");
         var regex = new RegExp(`\^${req.params.categoryPath}`);
         var result = advert.filter((item) => item.advert.categoryPath.match(regex));
-        successResponse(res, statusCode.OK, result);
+        const { error, pageList, page, pageSize } = await pagination(result, req);
+        if (error) {
+            return errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        }
+        const data = await advertCard(res, pageList);
+        successResponse(res, statusCode.OK, {
+            data,
+            currentPage: page,
+            totalPage: Math.ceil(result.length / pageSize),
+        });
     } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
+};
+
+const advertGetByUser = async(req, res) => {
+    try {
+        const advert = await Advert.find().populate("advert");
+        var result = advert.filter(
+            (item) => item.advert.user._id.toString() === req.userId
+        );
+        const { error, pageList, page, pageSize } = await pagination(result, req);
+        if (error) {
+            return errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        }
+        const data = await advertCard(res, pageList);
+        successResponse(res, statusCode.OK, {
+            data,
+            currentPage: page,
+            totalPage: Math.ceil(result.length / pageSize),
+        });
+    } catch (error) {
+        console.log(error);
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
@@ -87,13 +134,10 @@ const advertDelete = async(req, res) => {
     }
 };
 
-//pagination will be added
-const advertGetAll = async(req, res) => {
+const advertCard = async(res, array) => {
     try {
-        const advert = await Advert.find().populate("advert");
-        console.log("adv", advert);
         var data = [];
-        advert.map((item) => {
+        array.map((item) => {
             const element = item.advert;
             data.push({
                 id: element._id,
@@ -106,7 +150,7 @@ const advertGetAll = async(req, res) => {
                 type: item.type,
             });
         });
-        successResponse(res, statusCode.OK, data);
+        return data;
     } catch (error) {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
@@ -121,4 +165,5 @@ module.exports = {
     advertUpdate,
     advertDelete,
     advertGetByCategory,
+    advertGetByUser,
 };
