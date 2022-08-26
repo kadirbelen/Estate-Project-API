@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const connection = require("./src/services/dbConnection");
+const compareImage = require("./src/utils/compareImageDrive");
 const categoryRouter = require("./src/routes/CategoryRouter");
 const advertRouter = require("./src/routes/AdvertRouter");
 const imageRouter = require("./src/routes/ImageRouter");

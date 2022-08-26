@@ -10,7 +10,7 @@ const AdvertHousingSchema = extendSchema(
         buildingAge: { type: String, required: true },
         floor: { type: Number, required: true },
         heatingType: { type: String, required: true },
-        itemStatus: { type: String },
+        itemStatus: { type: String, required: true },
         interiorFeatures: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "InteriorFeature",

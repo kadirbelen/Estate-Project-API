@@ -1225,99 +1225,111 @@
                         "data": {
                           "allOf": [
                             {
-                              "$ref": "#/paths/~1advert~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/1"
-                            },
-                            {
-                              "allOf": [
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "id": {
-                                      "title": "advert id",
-                                      "description": "advert id",
-                                      "type": "string",
-                                      "example": "62ed69679c045c97a63390a4"
-                                    },
-                                    "title": {
-                                      "title": "Advert title",
-                                      "description": "Advert title",
-                                      "type": "string",
-                                      "example": "example"
-                                    },
-                                    "price": {
-                                      "title": "Advert price",
-                                      "description": "Advert price",
-                                      "type": "number",
-                                      "example": "250000"
-                                    },
-                                    "squareMeters": {
-                                      "title": "Advert squareMeters",
-                                      "description": "Advert squareMeters",
-                                      "type": "number",
-                                      "example": 150
-                                    },
-                                    "date": {
-                                      "title": "Advert create date",
-                                      "description": "Advert create date",
-                                      "type": "date",
-                                      "example": "2022-08-24T14:04:52.054Z"
-                                    },
-                                    "type": {
-                                      "title": "Advert category type",
-                                      "description": "Advert category type",
-                                      "type": "string",
-                                      "example": "Arsa"
-                                    }
-                                  }
-                                },
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "address": {
-                                      "allOf": [
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "city": {
-                                              "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                              "type": "object",
+                              "properties": {
+                                "cards": {
+                                  "type": "array",
+                                  "items": {
+                                    "allOf": [
+                                      {
+                                        "$ref": "#/paths/~1advert~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/1"
+                                      },
+                                      {
+                                        "allOf": [
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "id": {
+                                                "title": "advert id",
+                                                "description": "advert id",
+                                                "type": "string",
+                                                "example": "62ed69679c045c97a63390a4"
+                                              },
+                                              "title": {
+                                                "title": "Advert title",
+                                                "description": "Advert title",
+                                                "type": "string",
+                                                "example": "example"
+                                              },
+                                              "price": {
+                                                "title": "Advert price",
+                                                "description": "Advert price",
+                                                "type": "number",
+                                                "example": "250000"
+                                              },
+                                              "squareMeters": {
+                                                "title": "Advert squareMeters",
+                                                "description": "Advert squareMeters",
+                                                "type": "number",
+                                                "example": 150
+                                              },
+                                              "date": {
+                                                "title": "Advert create date",
+                                                "description": "Advert create date",
+                                                "type": "date",
+                                                "example": "2022-08-24T14:04:52.054Z"
+                                              },
+                                              "type": {
+                                                "title": "Advert category type",
+                                                "description": "Advert category type",
+                                                "type": "string",
+                                                "example": "Arsa"
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "type": "object",
+                                            "properties": {
+                                              "address": {
+                                                "allOf": [
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "city": {
+                                                        "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                                                      }
+                                                    }
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "district": {
+                                                        "allOf": [
+                                                          {
+                                                            "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                                                          },
+                                                          {
+                                                            "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1/properties/address/allOf/0"
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  },
+                                                  {
+                                                    "type": "object",
+                                                    "properties": {
+                                                      "town": {
+                                                        "allOf": [
+                                                          {
+                                                            "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                                                          },
+                                                          {
+                                                            "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1/properties/address/allOf/2"
+                                                          }
+                                                        ]
+                                                      }
+                                                    }
+                                                  }
+                                                ]
+                                              }
                                             }
                                           }
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "district": {
-                                              "allOf": [
-                                                {
-                                                  "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
-                                                },
-                                                {
-                                                  "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1/properties/address/allOf/0"
-                                                }
-                                              ]
-                                            }
-                                          }
-                                        },
-                                        {
-                                          "type": "object",
-                                          "properties": {
-                                            "town": {
-                                              "allOf": [
-                                                {
-                                                  "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
-                                                },
-                                                {
-                                                  "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1/properties/address/allOf/2"
-                                                }
-                                              ]
-                                            }
-                                          }
-                                        }
-                                      ]
-                                    }
+                                        ]
+                                      }
+                                    ]
                                   }
                                 }
-                              ]
+                              }
                             },
                             {
                               "type": "object",

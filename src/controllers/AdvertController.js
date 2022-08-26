@@ -56,9 +56,9 @@ const advertGetAll = async(req, res) => {
         if (error) {
             return errorResponse(res, statusCode.BAD_REQUEST, error.message);
         }
-        const data = await advertCard(res, pageList);
+        const cards = await advertCard(res, pageList);
         successResponse(res, statusCode.OK, {
-            data,
+            cards,
             currentPage: page,
             totalPage: Math.ceil(advert.length / pageSize),
         });
@@ -76,9 +76,9 @@ const advertGetByCategory = async(req, res) => {
         if (error) {
             return errorResponse(res, statusCode.BAD_REQUEST, error.message);
         }
-        const data = await advertCard(res, pageList);
+        const cards = await advertCard(res, pageList);
         successResponse(res, statusCode.OK, {
-            data,
+            cards,
             currentPage: page,
             totalPage: Math.ceil(result.length / pageSize),
         });
@@ -97,9 +97,9 @@ const advertGetByUser = async(req, res) => {
         if (error) {
             return errorResponse(res, statusCode.BAD_REQUEST, error.message);
         }
-        const data = await advertCard(res, pageList);
+        const cards = await advertCard(res, pageList);
         successResponse(res, statusCode.OK, {
-            data,
+            cards,
             currentPage: page,
             totalPage: Math.ceil(result.length / pageSize),
         });
