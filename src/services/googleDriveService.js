@@ -39,10 +39,10 @@ async function uploadFile(fileObject) {
     }
 }
 
-async function deleteFile(req, res) {
+async function deleteFile(fileId, res) {
     try {
         const response = await drive.files.delete({
-            fileId: req.params.remoteId,
+            fileId: fileId,
         });
     } catch (error) {
         console.log(error.message);
@@ -73,4 +73,5 @@ async function publicUrl(req, res) {
         console.log(error.message);
     }
 }
+
 module.exports = { publicUrl, deleteFile };

@@ -18,7 +18,7 @@ const imagePost = async(req, res) => {
 const imageDelete = async(req, res) => {
     try {
         console.log("idi", req.params.remoteId);
-        await driveService.deleteFile(req, res);
+        await driveService.deleteFile(req.params.remoteId, res);
         await ImageTemporary.findOneAndRemove({
             remoteId: req.params.remoteId,
         });
