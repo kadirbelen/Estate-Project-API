@@ -1,6 +1,7 @@
 const { google } = require("googleapis");
 const fs = require("fs");
 let stream = require("stream");
+var Jimp = require("jimp");
 
 const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,
@@ -14,12 +15,49 @@ const drive = google.drive({
     version: "v3",
     auth: oauth2Client,
 });
+//text yazısı
+// var sizeOf = require("image-size");
+// async function textOverlay(fileObject) {
+//     const font = await Jimp.loadFont(Jimp.FONT_SANS_64_WHITE);
+//     const image = await Jimp.read(fileObject.buffer);
+//     var dimensions = sizeOf(fileObject.buffer);
+//     const file = image.print(
+//         font,
+//         dimensions.width / 4,
+//         dimensions.height / 2,
+//         "RENTIZ"
+//     );
+//     console.log("size", dimensions.width, dimensions.height);
+//     let bufferImage;
+//     file.getBuffer(fileObject.mimetype, (err, buffer) => {
+//         bufferImage = buffer;
+//     });
+//     return bufferImage;
+// }
+
+//resimlerin üzerine logo ekleme
+async function waterMark(fileObject) {
+    let watermark = await Jimp.read("uploads\\rentiz.png");
+    watermark = watermark.resize(100, 100);
+    const image = await Jimp.read(fileObject.buffer);
+    image.composite(watermark, 0, 0, {
+        mode: Jimp.BLEND_SOURCE_OVER,
+        opacityDest: 1,
+        opacitySource: 0.5,
+    });
+    let bufferImage;
+    image.getBuffer(fileObject.mimetype, (err, buffer) => {
+        bufferImage = buffer;
+    });
+    return bufferImage;
+}
 
 async function uploadFile(fileObject) {
     try {
+        const buffer = await waterMark(fileObject);
         var folderId = "1hFKDwve9yGDUgmLaByVun_kaSzJmi8S9";
         var bufferStream = new stream.PassThrough();
-        bufferStream.end(fileObject.buffer);
+        bufferStream.end(buffer);
         var mimeType = fileObject.mimetype;
         var fileName = Date.now() + "-" + fileObject.originalname;
         const response = await drive.files.create({
@@ -33,7 +71,6 @@ async function uploadFile(fileObject) {
                 body: bufferStream,
             },
         });
-        console.log("da", response.data);
         return response.data;
     } catch (error) {
         console.log("deneme");
@@ -54,6 +91,7 @@ async function deleteFile(fileId, res) {
 async function publicUrl(req, res) {
     try {
         const { file } = req;
+        console.log("file", file);
         const data = await uploadFile(file);
         await drive.permissions.create({
             fileId: data.id,
@@ -69,6 +107,10 @@ async function publicUrl(req, res) {
         const imageUrl = await result.data.webContentLink.split(
             "&export=download"
         )[0];
+
+        // await textOverlay(imageUrl);
+        // console.log("url", imageUrl);
+
         const response = { remoteId: data.id, url: imageUrl, name: data.name };
         return response;
     } catch (error) {
