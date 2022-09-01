@@ -781,6 +781,23 @@
                         "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/2/allOf/1"
                       }
                     ]
+                  },
+                  {
+                    "required": [
+                      "images",
+                      "title",
+                      "description",
+                      "price",
+                      "squareMeters",
+                      "categoryPath",
+                      "address",
+                      "roomCount",
+                      "netSquareMeters",
+                      "buildingAge",
+                      "floor",
+                      "heatingType",
+                      "itemStatus"
+                    ]
                   }
                 ]
               }

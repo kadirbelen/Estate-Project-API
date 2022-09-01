@@ -8,6 +8,7 @@ const Advert = require("../models/advertModels/Advert");
 const genericController = require("./GenericController");
 const mongoose = require("mongoose");
 const pagination = require("../utils/pagination");
+const driveService = require("../services/googleDriveService");
 
 const advertHousingPost = async(req, res) => {
     await genericController.genericAdvertPost(
@@ -51,14 +52,13 @@ const advertGetById = async(req, res) => {
 
 const advertGetAll = async(req, res) => {
     try {
-        const advert = await Advert.find().populate("advert");
+        const advert = await advertCard(req, res);
         const { error, pageList, page, pageSize } = await pagination(advert, req);
         if (error) {
             return errorResponse(res, statusCode.BAD_REQUEST, error.message);
         }
-        const cards = await advertCard(res, pageList);
         successResponse(res, statusCode.OK, {
-            cards,
+            pageList,
             currentPage: page,
             totalPage: Math.ceil(advert.length / pageSize),
         });
@@ -70,15 +70,18 @@ const advertGetAll = async(req, res) => {
 const advertGetByCategory = async(req, res) => {
     try {
         const advert = await Advert.find().populate("advert");
+
         var regex = new RegExp(`\^${req.params.categoryPath}`);
         var result = advert.filter((item) => item.advert.categoryPath.match(regex));
+
         const { error, pageList, page, pageSize } = await pagination(result, req);
+
         if (error) {
             return errorResponse(res, statusCode.BAD_REQUEST, error.message);
         }
-        const cards = await advertCard(res, pageList);
+
         successResponse(res, statusCode.OK, {
-            cards,
+            pageList,
             currentPage: page,
             totalPage: Math.ceil(result.length / pageSize),
         });
@@ -90,16 +93,19 @@ const advertGetByCategory = async(req, res) => {
 const advertGetByUser = async(req, res) => {
     try {
         const advert = await Advert.find().populate("advert");
+
         var result = advert.filter(
             (item) => item.advert.user._id.toString() === req.userId
         );
+
         const { error, pageList, page, pageSize } = await pagination(result, req);
+
         if (error) {
             return errorResponse(res, statusCode.BAD_REQUEST, error.message);
         }
-        const cards = await advertCard(res, pageList);
+
         successResponse(res, statusCode.OK, {
-            cards,
+            pageList,
             currentPage: page,
             totalPage: Math.ceil(result.length / pageSize),
         });
@@ -123,9 +129,12 @@ const advertDelete = async(req, res) => {
     try {
         const advert = await Advert.findOne({ advert: req.params.id });
         const modelName = mongoose.model(advert.dynamicModel);
-        const isDelete = await modelName.findByIdAndRemove(req.params.id);
-        if (!isDelete) {
+        const deleted = await modelName.findByIdAndRemove(req.params.id);
+        if (!deleted) {
             return errorResponse(res, statusCode.BAD_REQUEST, "İlan silinemedi");
+        }
+        for (const item of deleted.images) {
+            await driveService.deleteFile(item.remoteId, res);
         }
         await Advert.findByIdAndRemove(advert._id);
         successResponse(res, statusCode.OK, "İlan silindi");
@@ -134,25 +143,23 @@ const advertDelete = async(req, res) => {
     }
 };
 
-const advertCard = async(res, array) => {
+const advertCard = async(req, res) => {
     try {
-        var data = [];
-        array.map((item) => {
-            const element = item.advert;
-            data.push({
-                id: element._id,
-                images: element.images[0],
-                title: element.title,
-                price: element.price,
-                address: element.address,
-                squareMeters: element.squareMeters,
-                date: element.createdAt,
-                type: item.type,
-            });
+        const advert = await Advert.find().populate({
+            path: "advert",
+            select: {
+                images: { $slice: ["$images", 1] },
+                title: 1,
+                price: 1,
+                address: 1,
+                squareMeters: 1,
+                date: 1,
+            },
+            populate: ["address.city", "address.district", "address.town"],
         });
-        return data;
+        return advert;
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        console.log("card", error.message);
     }
 };
 

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const extendSchema = require("mongoose-extend-schema");
 const AdvertBaseSchema = require("./AdvertBase");
-const autopopulate = require("mongoose-autopopulate");
+// const autopopulate = require("mongoose-autopopulate");
 //??
 const AdvertLandSchema = extendSchema(
     AdvertBaseSchema, {
@@ -10,7 +10,7 @@ const AdvertLandSchema = extendSchema(
         locationFeatures: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "LocationFeature",
-            autopopulate: true,
+            // autopopulate: true,
         }, ],
     }, {
         versionKey: false,
@@ -18,5 +18,5 @@ const AdvertLandSchema = extendSchema(
     }
 );
 
-AdvertLandSchema.plugin(autopopulate);
+// AdvertLandSchema.plugin(autopopulate);
 module.exports = mongoose.model("AdvertLand", AdvertLandSchema);

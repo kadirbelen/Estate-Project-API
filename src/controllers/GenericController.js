@@ -31,6 +31,22 @@ const genericGetByQueryPopulate = async(req, res, model, query, populate) => {
     }
 };
 
+const genericGetByQueryPopulateWithSelect = async(
+    req,
+    res,
+    model,
+    query,
+    populate,
+    select
+) => {
+    try {
+        const newModel = await model.find(query).populate(populate).select(select);
+        return newModel;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 const genericPost = async(req, res, model) => {
     try {
         const newModel = new model(req.body);
@@ -106,4 +122,5 @@ module.exports = {
     genericAdvertPost,
     genericGetByQuery,
     genericGetByQueryPopulate,
+    genericGetByQueryPopulateWithSelect,
 };

@@ -5,7 +5,7 @@ const AdvertBaseSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        autopopulate: { select: "-password" },
+        // autopopulate: { select: "-password" },
     },
     images: [{
         remoteId: { type: String, required: true },
@@ -21,17 +21,17 @@ const AdvertBaseSchema = new mongoose.Schema({
         city: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "City",
-            autopopulate: true,
+            // autopopulate: true,
         },
         district: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "District",
-            autopopulate: true,
+            // autopopulate: true,
         },
         town: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Town",
-            autopopulate: true,
+            // autopopulate: true,
         },
     },
 }, {

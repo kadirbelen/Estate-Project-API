@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const extendSchema = require("mongoose-extend-schema");
 const AdvertBaseSchema = require("./AdvertBase");
-const autopopulate = require("mongoose-autopopulate");
+// const autopopulate = require("mongoose-autopopulate");
 
 const AdvertHousingSchema = extendSchema(
     AdvertBaseSchema, {
@@ -14,17 +14,17 @@ const AdvertHousingSchema = extendSchema(
         interiorFeatures: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "InteriorFeature",
-            autopopulate: true,
+            // autopopulate: true,
         }, ],
         externalFeatures: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "ExternalFeature",
-            autopopulate: true,
+            // autopopulate: true,
         }, ],
         locationFeatures: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "LocationFeature",
-            autopopulate: true,
+            // autopopulate: true,
         }, ],
     }, {
         versionKey: false,
@@ -33,6 +33,6 @@ const AdvertHousingSchema = extendSchema(
 );
 
 // AdvertHousingSchema.plugin(autopopulate);
-AdvertHousingSchema.plugin(autopopulate, { functions: ["findOne", "find"] });
+// AdvertHousingSchema.plugin(autopopulate, { functions: ["findOne"] });
 const model = mongoose.model("AdvertHousing", AdvertHousingSchema);
 module.exports = { model, AdvertHousingSchema };

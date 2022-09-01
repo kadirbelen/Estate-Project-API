@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const extendSchema = require("mongoose-extend-schema");
 const AdvertHousingSchema = require("./AdvertHousing").AdvertHousingSchema;
-const autopopulate = require("mongoose-autopopulate");
+// const autopopulate = require("mongoose-autopopulate");
 //??
 const AdvertWorkPlaceSchema = extendSchema(
     AdvertHousingSchema, {}, {
@@ -9,5 +9,5 @@ const AdvertWorkPlaceSchema = extendSchema(
         timestamps: true,
     }
 );
-AdvertWorkPlaceSchema.plugin(autopopulate);
+// AdvertWorkPlaceSchema.plugin(autopopulate);
 module.exports = mongoose.model("AdvertWorkPlace", AdvertWorkPlaceSchema);
