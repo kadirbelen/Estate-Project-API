@@ -31,7 +31,7 @@
     }
   ],
   "paths": {
-    "/user/login": {
+    "/users/login": {
       "summary": "",
       "description": "",
       "post": {
@@ -57,14 +57,14 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "422": {
             "description": "UnprocessableEntity error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/paths/~1user~1login/post/responses/400/content/application~1json/schema"
+                  "$ref": "#/paths/~1adverts/get/responses/400/content/application~1json/schema"
                 }
               }
             }
@@ -72,7 +72,7 @@
         }
       }
     },
-    "/user/register": {
+    "/users/register": {
       "summary": "",
       "description": "",
       "post": {
@@ -97,15 +97,15 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "422": {
-            "$ref": "#/paths/~1user~1login/post/responses/422"
+            "$ref": "#/paths/~1users~1login/post/responses/422"
           }
         }
       }
     },
-    "/user/profile": {
+    "/users/profile": {
       "summary": "",
       "description": "",
       "get": {
@@ -133,18 +133,18 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "401": {
-            "$ref": "#/paths/~1advert~1land/post/responses/401"
+            "$ref": "#/paths/~1adverts/get/responses/401"
           },
           "403": {
-            "$ref": "#/paths/~1advert~1land/post/responses/403"
+            "$ref": "#/paths/~1adverts/get/responses/403"
           }
         }
       }
     },
-    "/user/verify/{userId}": {
+    "/users/verify/{userId}": {
       "summary": "",
       "description": "",
       "get": {
@@ -177,12 +177,12 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           }
         }
       }
     },
-    "/user/logout": {
+    "/users/logout": {
       "summary": "",
       "description": "",
       "delete": {
@@ -209,13 +209,13 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "401": {
-            "$ref": "#/paths/~1advert~1land/post/responses/401"
+            "$ref": "#/paths/~1adverts/get/responses/401"
           },
           "403": {
-            "$ref": "#/paths/~1advert~1land/post/responses/403"
+            "$ref": "#/paths/~1adverts/get/responses/403"
           }
         }
       }
@@ -299,32 +299,7 @@
             }
           },
           "400": {
-            "description": "Bad request error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "statusCode": {
-                      "title": "Response status code",
-                      "description": "Response status code",
-                      "type": "string"
-                    },
-                    "error": {
-                      "properties": {
-                        "message": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "success": {
-                      "type": "boolean",
-                      "default": false
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/paths/~1adverts/get/responses/400"
           }
         }
       }
@@ -362,12 +337,7 @@
                                   "description": "MongoDb Id of the document",
                                   "type": "string",
                                   "example": "62ed69679c045c97a63390a4"
-                                }
-                              }
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
+                                },
                                 "item": {
                                   "title": "interior item name",
                                   "description": "interior item name",
@@ -386,7 +356,7 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           }
         }
       },
@@ -404,7 +374,7 @@
                 "allOf": [
                   {
                     "type": "object",
-                    "$ref": "#/paths/~1features~1interior/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/1"
+                    "$ref": "#/paths/~1features~1interior/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
                   },
                   {
                     "required": [
@@ -421,10 +391,10 @@
             "$ref": "#/paths/~1features~1interior/get/responses/200"
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "422": {
-            "$ref": "#/paths/~1user~1login/post/responses/422"
+            "$ref": "#/paths/~1users~1login/post/responses/422"
           }
         }
       }
@@ -443,7 +413,7 @@
             "$ref": "#/paths/~1features~1interior/get/responses/200"
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           }
         }
       },
@@ -461,10 +431,10 @@
             "$ref": "#/paths/~1features~1interior/get/responses/200"
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "422": {
-            "$ref": "#/paths/~1user~1login/post/responses/422"
+            "$ref": "#/paths/~1users~1login/post/responses/422"
           }
         }
       }
@@ -483,7 +453,7 @@
             "$ref": "#/paths/~1features~1interior/get/responses/200"
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           }
         }
       },
@@ -501,15 +471,15 @@
             "$ref": "#/paths/~1features~1interior/get/responses/200"
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "422": {
-            "$ref": "#/paths/~1user~1login/post/responses/422"
+            "$ref": "#/paths/~1users~1login/post/responses/422"
           }
         }
       }
     },
-    "/location/city": {
+    "/locations/city": {
       "summary": "",
       "description": "",
       "get": {
@@ -561,12 +531,12 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           }
         }
       }
     },
-    "/location/city/{cityId}/district": {
+    "/locations/city/{cityId}/district": {
       "summary": "",
       "description": "",
       "get": {
@@ -603,10 +573,10 @@
                         "data": {
                           "allOf": [
                             {
-                              "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                              "$ref": "#/paths/~1locations~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
                             },
                             {
-                              "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1/properties/address/allOf/0"
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/3/properties/address/allOf/0"
                             }
                           ]
                         }
@@ -618,12 +588,12 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           }
         }
       }
     },
-    "/location/city/district/{districtId}/town": {
+    "/locations/city/district/{districtId}/town": {
       "summary": "",
       "description": "",
       "get": {
@@ -660,10 +630,10 @@
                         "data": {
                           "allOf": [
                             {
-                              "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                              "$ref": "#/paths/~1locations~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
                             },
                             {
-                              "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1/properties/address/allOf/1"
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/3/properties/address/allOf/1"
                             }
                           ]
                         }
@@ -675,12 +645,12 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           }
         }
       }
     },
-    "/advert/housing": {
+    "/adverts/housing": {
       "summary": "",
       "description": "",
       "post": {
@@ -701,10 +671,10 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/0"
+                    "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/0"
                   },
                   {
-                    "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1"
+                    "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
                   },
                   {
                     "allOf": [
@@ -748,39 +718,42 @@
                             "example": "eşyalı"
                           }
                         }
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "interiorFeatures": {
-                            "type": "array",
-                            "items": {
-                              "title": "Advert interior features",
-                              "description": "Advert interior features",
-                              "type": "string",
-                              "example": "62ed69679c045c97a63390a4"
-                            }
-                          }
-                        }
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "externalFeatures": {
-                            "type": "array",
-                            "items": {
-                              "title": "Advert external features",
-                              "description": "Advert external features",
-                              "type": "string",
-                              "example": "62ed69679c045c97a63390a4"
-                            }
-                          }
-                        }
-                      },
-                      {
-                        "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/2/allOf/1"
                       }
                     ]
+                  },
+                  {
+                    "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/3"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "interiorFeatures": {
+                        "type": "array",
+                        "items": {
+                          "title": "Advert interior features",
+                          "description": "Advert interior features",
+                          "type": "string",
+                          "example": "62ed69679c045c97a63390a4"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "externalFeatures": {
+                        "type": "array",
+                        "items": {
+                          "title": "Advert external features",
+                          "description": "Advert external features",
+                          "type": "string",
+                          "example": "62ed69679c045c97a63390a4"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/4"
                   },
                   {
                     "required": [
@@ -791,6 +764,7 @@
                       "squareMeters",
                       "categoryPath",
                       "address",
+                      "type",
                       "roomCount",
                       "netSquareMeters",
                       "buildingAge",
@@ -821,16 +795,28 @@
                         "data": {
                           "allOf": [
                             {
-                              "$ref": "#/paths/~1advert~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                              "$ref": "#/paths/~1adverts~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
                             },
                             {
-                              "$ref": "#/paths/~1advert~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/1"
+                              "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
                             },
                             {
-                              "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1"
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
                             },
                             {
-                              "$ref": "#/paths/~1advert~1housing/post/requestBody/content/application~1json/schema/allOf/2"
+                              "$ref": "#/paths/~1adverts~1housing/post/requestBody/content/application~1json/schema/allOf/2"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/3"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1housing/post/requestBody/content/application~1json/schema/allOf/4"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1housing/post/requestBody/content/application~1json/schema/allOf/5"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/4"
                             }
                           ]
                         }
@@ -842,18 +828,18 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "401": {
-            "$ref": "#/paths/~1advert~1land/post/responses/401"
+            "$ref": "#/paths/~1adverts/get/responses/401"
           },
           "403": {
-            "$ref": "#/paths/~1advert~1land/post/responses/403"
+            "$ref": "#/paths/~1adverts/get/responses/403"
           }
         }
       }
     },
-    "/advert/land": {
+    "/adverts/land": {
       "summary": "",
       "description": "",
       "post": {
@@ -914,12 +900,56 @@
                         "type": "number",
                         "example": 150
                       },
+                      "type": {
+                        "title": "Advert type",
+                        "description": "Advert type",
+                        "type": "string",
+                        "example": "example"
+                      },
                       "categoryPath": {
                         "title": "Advert category path",
                         "description": "Advert category path",
                         "type": "string",
                         "example": "62ed69679c045c97a63390a4,62ed69679c045c97a63390a4,62ed69679c045c97a63390a4"
                       },
+                      "createdAt": {
+                        "title": "Advert create date",
+                        "description": "Advert create date",
+                        "type": "date",
+                        "example": "2022-08-24T14:04:52.054Z"
+                      },
+                      "updatedAt": {
+                        "title": "Advert update date",
+                        "description": "Advert update date",
+                        "type": "date",
+                        "example": "2022-08-24T14:04:52.054Z"
+                      }
+                    }
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "landStatus": {
+                            "title": "Advert land status",
+                            "description": "Advert land status",
+                            "type": "string",
+                            "example": "Ekili/Boş"
+                          },
+                          "parcel": {
+                            "title": "Advert parcel m^2",
+                            "description": "Advert parcel m^2",
+                            "type": "number",
+                            "example": 150
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
                       "address": {
                         "allOf": [
                           {
@@ -960,39 +990,18 @@
                     }
                   },
                   {
-                    "allOf": [
-                      {
-                        "type": "object",
-                        "properties": {
-                          "landStatus": {
-                            "title": "Advert land status",
-                            "description": "Advert land status",
-                            "type": "string",
-                            "example": "Ekili/Boş"
-                          },
-                          "parcel": {
-                            "title": "Advert parcel m^2",
-                            "description": "Advert parcel m^2",
-                            "type": "number",
-                            "example": 150
-                          }
-                        }
-                      },
-                      {
-                        "type": "object",
-                        "properties": {
-                          "locationFeatures": {
-                            "type": "array",
-                            "items": {
-                              "title": "Advert location features",
-                              "description": "Advert location features",
-                              "type": "string",
-                              "example": "62ed69679c045c97a63390a4"
-                            }
-                          }
+                    "type": "object",
+                    "properties": {
+                      "locationFeatures": {
+                        "type": "array",
+                        "items": {
+                          "title": "Advert location features",
+                          "description": "Advert location features",
+                          "type": "string",
+                          "example": "62ed69679c045c97a63390a4"
                         }
                       }
-                    ]
+                    }
                   }
                 ]
               }
@@ -1026,6 +1035,561 @@
                                 }
                               }
                             },
+                            {
+                              "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/2"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/3"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/4"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1adverts/get/responses/400"
+          },
+          "401": {
+            "$ref": "#/paths/~1adverts/get/responses/401"
+          },
+          "403": {
+            "$ref": "#/paths/~1adverts/get/responses/403"
+          }
+        }
+      }
+    },
+    "/adverts/workPlace": {
+      "summary": "",
+      "description": "",
+      "post": {
+        "tags": [
+          "Adverts"
+        ],
+        "summary": "Advert work place post",
+        "description": "Advert work place post",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "description": "advert housing",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/0"
+                  },
+                  {
+                    "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "$ref": "#/paths/~1adverts~1housing/post/requestBody/content/application~1json/schema/allOf/2"
+                      }
+                    ]
+                  },
+                  {
+                    "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/3"
+                  },
+                  {
+                    "$ref": "#/paths/~1adverts~1housing/post/requestBody/content/application~1json/schema/allOf/4"
+                  },
+                  {
+                    "$ref": "#/paths/~1adverts~1housing/post/requestBody/content/application~1json/schema/allOf/5"
+                  },
+                  {
+                    "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/4"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/login/allOf/0"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "allOf": [
+                            {
+                              "$ref": "#/paths/~1adverts~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1workPlace/post/requestBody/content/application~1json/schema/allOf/2"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/3"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1housing/post/requestBody/content/application~1json/schema/allOf/4"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1housing/post/requestBody/content/application~1json/schema/allOf/5"
+                            },
+                            {
+                              "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/4"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1adverts/get/responses/400"
+          },
+          "401": {
+            "$ref": "#/paths/~1adverts/get/responses/401"
+          },
+          "403": {
+            "$ref": "#/paths/~1adverts/get/responses/403"
+          }
+        }
+      }
+    },
+    "/adverts/user": {
+      "summary": "",
+      "description": "",
+      "get": {
+        "tags": [
+          "Adverts"
+        ],
+        "summary": "Get advert by user",
+        "description": "Get advert by user",
+        "parameters": [
+          {
+            "$ref": "#/paths/~1adverts/get/parameters/0"
+          },
+          {
+            "$ref": "#/paths/~1adverts/get/parameters/1"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1adverts/get/responses/400"
+          },
+          "401": {
+            "$ref": "#/paths/~1adverts/get/responses/401"
+          },
+          "403": {
+            "$ref": "#/paths/~1adverts/get/responses/403"
+          }
+        }
+      }
+    },
+    "/adverts/{id}": {
+      "summary": "",
+      "description": "",
+      "get": {
+        "tags": [
+          "Adverts"
+        ],
+        "summary": "Get advert details",
+        "description": "Get advert details",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/login/allOf/0"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "userName": {
+                                      "title": "UserName",
+                                      "description": "UserName",
+                                      "type": "string",
+                                      "example": "string"
+                                    },
+                                    "email": {
+                                      "title": "User email",
+                                      "description": "User's email",
+                                      "type": "string",
+                                      "example": "deneme@gmail.com"
+                                    },
+                                    "role": {
+                                      "title": "User role",
+                                      "description": "User's role",
+                                      "type": "string"
+                                    },
+                                    "verified": {
+                                      "title": "User verified",
+                                      "description": "User's verified",
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1housing/post/requestBody/content/application~1json/schema/allOf/2"
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "address": {
+                                      "allOf": [
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "city": {
+                                              "$ref": "#/paths/~1locations~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "district": {
+                                              "allOf": [
+                                                {
+                                                  "$ref": "#/paths/~1locations~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                                                },
+                                                {
+                                                  "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/3/properties/address/allOf/0"
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        },
+                                        {
+                                          "type": "object",
+                                          "properties": {
+                                            "town": {
+                                              "allOf": [
+                                                {
+                                                  "$ref": "#/paths/~1locations~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                                                },
+                                                {
+                                                  "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/3/properties/address/allOf/2"
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "interiorFeatures": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "allOf": [
+                                          {
+                                            "$ref": "#/paths/~1features~1interior/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "externalFeatures": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "allOf": [
+                                          {
+                                            "$ref": "#/paths/~1features~1interior/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "locationFeatures": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "allOf": [
+                                          {
+                                            "$ref": "#/paths/~1features~1interior/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/login/allOf/0"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "allOf": [
+                                {
+                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/0"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/2"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/4"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/7"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/login/allOf/0"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "allOf": [
+                                {
+                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/0"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1workPlace/post/requestBody/content/application~1json/schema/allOf/2"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/4"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/5"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/6"
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/7"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1adverts/get/responses/400"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Adverts"
+        ],
+        "summary": "Advert delete",
+        "description": "Advert delete",
+        "parameters": [
+          {
+            "$ref": "#/paths/~1adverts~1%7Bid%7D/get/parameters/0"
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Advert delete successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/login/allOf/0"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1adverts/get/responses/400"
+          },
+          "401": {
+            "$ref": "#/paths/~1adverts/get/responses/401"
+          },
+          "403": {
+            "$ref": "#/paths/~1adverts/get/responses/403"
+          }
+        }
+      }
+    },
+    "/adverts": {
+      "summary": "",
+      "description": "",
+      "get": {
+        "tags": [
+          "Adverts"
+        ],
+        "summary": "Get adverts",
+        "description": "Get adverts",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/login/allOf/0"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "currentPage": {
+                              "title": "Current page",
+                              "description": "Current page",
+                              "type": "number",
+                              "example": 1
+                            },
+                            "totalPage": {
+                              "title": "Total page count",
+                              "description": "Total page count",
+                              "type": "number",
+                              "example": 1
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "allOf": [
                             {
                               "type": "object",
                               "properties": {
@@ -1064,10 +1628,52 @@
                               }
                             },
                             {
-                              "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1"
-                            },
-                            {
-                              "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/2"
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "title": "advert id",
+                                      "description": "advert id",
+                                      "type": "string",
+                                      "example": "62ed69679c045c97a63390a4"
+                                    },
+                                    "title": {
+                                      "title": "Advert title",
+                                      "description": "Advert title",
+                                      "type": "string",
+                                      "example": "example"
+                                    },
+                                    "price": {
+                                      "title": "Advert price",
+                                      "description": "Advert price",
+                                      "type": "number",
+                                      "example": "250000"
+                                    },
+                                    "squareMeters": {
+                                      "title": "Advert squareMeters",
+                                      "description": "Advert squareMeters",
+                                      "type": "number",
+                                      "example": 150
+                                    },
+                                    "createdAt": {
+                                      "title": "Advert create date",
+                                      "description": "Advert create date",
+                                      "type": "date",
+                                      "example": "2022-08-24T14:04:52.054Z"
+                                    },
+                                    "type": {
+                                      "title": "Advert category type",
+                                      "description": "Advert category type",
+                                      "type": "string",
+                                      "example": "Arsa"
+                                    }
+                                  }
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/4"
+                                }
+                              ]
                             }
                           ]
                         }
@@ -1079,14 +1685,39 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "description": "Bad request error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "statusCode": {
+                      "title": "Response status code",
+                      "description": "Response status code",
+                      "type": "string"
+                    },
+                    "error": {
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "success": {
+                      "type": "boolean",
+                      "default": false
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized error",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/paths/~1user~1login/post/responses/400/content/application~1json/schema"
+                  "$ref": "#/paths/~1adverts/get/responses/400/content/application~1json/schema"
                 }
               }
             }
@@ -1096,7 +1727,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/paths/~1user~1login/post/responses/400/content/application~1json/schema"
+                  "$ref": "#/paths/~1adverts/get/responses/400/content/application~1json/schema"
                 }
               }
             }
@@ -1104,125 +1735,30 @@
         }
       }
     },
-    "/advert/workPlace": {
-      "summary": "",
-      "description": "",
-      "post": {
-        "tags": [
-          "Adverts"
-        ],
-        "summary": "Advert work place post",
-        "description": "Advert work place post",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "requestBody": {
-          "description": "advert housing",
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/0"
-                  },
-                  {
-                    "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1"
-                  },
-                  {
-                    "allOf": [
-                      {
-                        "$ref": "#/paths/~1advert~1housing/post/requestBody/content/application~1json/schema/allOf/2"
-                      }
-                    ]
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/login/allOf/0"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "allOf": [
-                            {
-                              "$ref": "#/paths/~1advert~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
-                            },
-                            {
-                              "$ref": "#/paths/~1advert~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/1"
-                            },
-                            {
-                              "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1"
-                            },
-                            {
-                              "$ref": "#/paths/~1advert~1workPlace/post/requestBody/content/application~1json/schema/allOf/2"
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
-          },
-          "401": {
-            "$ref": "#/paths/~1advert~1land/post/responses/401"
-          },
-          "403": {
-            "$ref": "#/paths/~1advert~1land/post/responses/403"
-          }
-        }
-      }
-    },
-    "/advert/getByUser": {
+    "/adverts/category/{path}": {
       "summary": "",
       "description": "",
       "get": {
         "tags": [
           "Adverts"
         ],
-        "summary": "Get advert by user",
-        "description": "Get advert by user",
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
+        "summary": "Get advert by category",
+        "description": "Get advert by category",
         "parameters": [
           {
-            "in": "query",
-            "name": "page",
+            "in": "path",
+            "name": "path",
             "schema": {
-              "type": "integer"
+              "type": "string"
             },
-            "required": false,
+            "required": true,
             "description": ""
           },
           {
-            "in": "query",
-            "name": "pageSize",
-            "schema": {
-              "type": "integer"
-            },
-            "required": false,
-            "description": ""
+            "$ref": "#/paths/~1adverts/get/parameters/0"
+          },
+          {
+            "$ref": "#/paths/~1adverts/get/parameters/1"
           }
         ],
         "responses": {
@@ -1231,162 +1767,24 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/login/allOf/0"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "allOf": [
-                            {
-                              "type": "object",
-                              "properties": {
-                                "cards": {
-                                  "type": "array",
-                                  "items": {
-                                    "allOf": [
-                                      {
-                                        "$ref": "#/paths/~1advert~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/1"
-                                      },
-                                      {
-                                        "allOf": [
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "id": {
-                                                "title": "advert id",
-                                                "description": "advert id",
-                                                "type": "string",
-                                                "example": "62ed69679c045c97a63390a4"
-                                              },
-                                              "title": {
-                                                "title": "Advert title",
-                                                "description": "Advert title",
-                                                "type": "string",
-                                                "example": "example"
-                                              },
-                                              "price": {
-                                                "title": "Advert price",
-                                                "description": "Advert price",
-                                                "type": "number",
-                                                "example": "250000"
-                                              },
-                                              "squareMeters": {
-                                                "title": "Advert squareMeters",
-                                                "description": "Advert squareMeters",
-                                                "type": "number",
-                                                "example": 150
-                                              },
-                                              "date": {
-                                                "title": "Advert create date",
-                                                "description": "Advert create date",
-                                                "type": "date",
-                                                "example": "2022-08-24T14:04:52.054Z"
-                                              },
-                                              "type": {
-                                                "title": "Advert category type",
-                                                "description": "Advert category type",
-                                                "type": "string",
-                                                "example": "Arsa"
-                                              }
-                                            }
-                                          },
-                                          {
-                                            "type": "object",
-                                            "properties": {
-                                              "address": {
-                                                "allOf": [
-                                                  {
-                                                    "type": "object",
-                                                    "properties": {
-                                                      "city": {
-                                                        "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
-                                                      }
-                                                    }
-                                                  },
-                                                  {
-                                                    "type": "object",
-                                                    "properties": {
-                                                      "district": {
-                                                        "allOf": [
-                                                          {
-                                                            "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
-                                                          },
-                                                          {
-                                                            "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1/properties/address/allOf/0"
-                                                          }
-                                                        ]
-                                                      }
-                                                    }
-                                                  },
-                                                  {
-                                                    "type": "object",
-                                                    "properties": {
-                                                      "town": {
-                                                        "allOf": [
-                                                          {
-                                                            "$ref": "#/paths/~1location~1city/get/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
-                                                          },
-                                                          {
-                                                            "$ref": "#/paths/~1advert~1land/post/requestBody/content/application~1json/schema/allOf/1/properties/address/allOf/2"
-                                                          }
-                                                        ]
-                                                      }
-                                                    }
-                                                  }
-                                                ]
-                                              }
-                                            }
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                }
-                              }
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "currentPage": {
-                                  "title": "Current page",
-                                  "description": "Current page",
-                                  "type": "number",
-                                  "example": 1
-                                },
-                                "totalPage": {
-                                  "title": "Total page count",
-                                  "description": "Total page count",
-                                  "type": "number",
-                                  "example": 1
-                                }
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    }
-                  ]
+                  "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema"
                 }
               }
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "401": {
-            "$ref": "#/paths/~1advert~1land/post/responses/401"
+            "$ref": "#/paths/~1adverts/get/responses/401"
           },
           "403": {
-            "$ref": "#/paths/~1advert~1land/post/responses/403"
+            "$ref": "#/paths/~1adverts/get/responses/403"
           }
         }
       }
     },
-    "/image/upload": {
+    "/images/upload": {
       "summary": "",
       "description": "",
       "post": {
@@ -1459,18 +1857,18 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "401": {
-            "$ref": "#/paths/~1advert~1land/post/responses/401"
+            "$ref": "#/paths/~1adverts/get/responses/401"
           },
           "403": {
-            "$ref": "#/paths/~1advert~1land/post/responses/403"
+            "$ref": "#/paths/~1adverts/get/responses/403"
           }
         }
       }
     },
-    "/image/{remoteId}": {
+    "/images/{remoteId}": {
       "summary": "",
       "description": "",
       "delete": {
@@ -1507,13 +1905,13 @@
             }
           },
           "400": {
-            "$ref": "#/paths/~1categories/get/responses/400"
+            "$ref": "#/paths/~1adverts/get/responses/400"
           },
           "401": {
-            "$ref": "#/paths/~1advert~1land/post/responses/401"
+            "$ref": "#/paths/~1adverts/get/responses/401"
           },
           "403": {
-            "$ref": "#/paths/~1advert~1land/post/responses/403"
+            "$ref": "#/paths/~1adverts/get/responses/403"
           }
         }
       }

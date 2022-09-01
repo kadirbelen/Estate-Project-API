@@ -3,37 +3,40 @@ const router = express.Router();
 const authToken = require("../middlewares/authToken");
 const validate = require("../middlewares/validationControl");
 const advertController = require("../controllers/AdvertController");
+const queryOptions = require("../middlewares/queryOptions");
 
 router.post(
     "/housing",
-    validate("housingSchema"),
     authToken.verifyAndAuthorizationToken(["user"]),
-    advertController.advertHousingPost
+    validate("housingSchema"),
+    advertController.advertPost
 );
 router.post(
     "/land",
-    validate("landSchema"),
     authToken.verifyAndAuthorizationToken(["user"]),
-    advertController.advertLandPost
+    validate("landSchema"),
+    advertController.advertPost
 );
 router.post(
     "/workPlace",
-    validate("workPlaceSchema"),
     authToken.verifyAndAuthorizationToken(["user"]),
-    advertController.advertWorkPlacePost
-);
-
-router.get("/getById/:id", advertController.advertGetById);
-router.get("/getAll", advertController.advertGetAll);
-router.patch("/:id", advertController.advertUpdate);
-router.delete("/:id", advertController.advertDelete);
-router.get(
-    "/getAdvertByCategory/:categoryPath",
-    advertController.advertGetByCategory
+    validate("workPlaceSchema"),
+    advertController.advertPost
 );
 router.get(
-    "/getByUser",
+    "/user",
+    queryOptions,
     authToken.verifyAndAuthorizationToken(["user"]),
     advertController.advertGetByUser
 );
+router.get(
+    "/category/:path",
+    queryOptions,
+    advertController.advertGetByCategory
+);
+router.get("/:id", advertController.advertGetById);
+router.get("/", queryOptions, advertController.advertGetAll);
+router.patch("/:id", advertController.advertUpdate);
+router.delete("/:id", advertController.advertDelete);
+
 module.exports = router;

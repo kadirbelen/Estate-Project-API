@@ -21,11 +21,11 @@ app.use(
 );
 app.use(bodyParser.json());
 
-app.use("/user", userRouter);
+app.use("/users", userRouter);
 app.use("/categories", categoryRouter);
-app.use("/location", addressRouter);
-app.use("/advert", advertRouter);
-app.use("/image", imageRouter);
+app.use("/locations", addressRouter);
+app.use("/adverts", advertRouter);
+app.use("/images", imageRouter);
 app.use("/features", featureRouter);
 app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 

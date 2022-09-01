@@ -1,7 +1,6 @@
 const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 const statusCode = require("http-status-codes").StatusCodes;
-const Advert = require("../models/advertModels/Advert");
 const ImageTemporary = require("../models/ImageTemporary");
 
 const genericGet = async(req, res, model) => {
@@ -30,20 +29,30 @@ const genericGetByQueryPopulate = async(req, res, model, query, populate) => {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
-
-const genericGetByQueryPopulateWithSelect = async(
-    req,
-    res,
-    model,
-    query,
-    populate,
-    select
-) => {
+//query options middleware den gelen queryler için genel yapı oluşturuldu
+const genericQueryOptions = async(req, model) => {
     try {
-        const newModel = await model.find(query).populate(populate).select(select);
-        return newModel;
+        const { pageSize, page, skip } = req.queryOptions.pagination;
+        const modelLength = await model.find(req.queryOptions.filtering);
+        const list = model
+            .find(req.queryOptions.filtering)
+            .limit(pageSize)
+            .skip(skip)
+            .sort(req.queryOptions.sorting);
+        return { list, modelLength, page, pageSize };
     } catch (error) {
-        console.log(error);
+        return { error };
+    }
+};
+//query options middleware den pagination yapısı kullanıldı. (özel queryler ve parametreler için oluşturuldu.Örneğin kategori path bilgisine göre sorgulamak)
+const getByPrivateQueryWithPagination = async(req, query, model) => {
+    try {
+        const { pageSize, page, skip } = req.queryOptions.pagination;
+        const modelLength = await model.find(query);
+        const list = model.find(query).limit(pageSize).skip(skip);
+        return { list, modelLength, page, pageSize };
+    } catch (error) {
+        return { error };
     }
 };
 
@@ -77,50 +86,13 @@ const genericDelete = async(req, res, model) => {
     }
 };
 
-const genericAdvertPost = async(req, res, model, ref, type) => {
-    try {
-        var images = [];
-        for (const item of req.body.images) {
-            const temporary = await ImageTemporary.findOne({ remoteId: item });
-            if (!temporary) {
-                return errorResponse(
-                    res,
-                    statusCode.BAD_REQUEST,
-                    `${item} Image not defined`
-                );
-            }
-            images.push({
-                remoteId: temporary.remoteId,
-                url: temporary.url,
-                name: temporary.name,
-            });
-            await ImageTemporary.findByIdAndRemove(temporary._id);
-        }
-        const advert = new model({
-            ...req.body,
-            images: images,
-            user: req.userId,
-        });
-        await advert.save();
-        const baseAdvert = new Advert({
-            advert: advert._id,
-            type: type,
-            dynamicModel: ref,
-        });
-        await baseAdvert.save();
-        successResponse(res, statusCode.OK, advert);
-    } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
-    }
-};
-
 module.exports = {
     genericDelete,
     genericPost,
     genericUpdate,
     genericGet,
-    genericAdvertPost,
     genericGetByQuery,
     genericGetByQueryPopulate,
-    genericGetByQueryPopulateWithSelect,
+    getByPrivateQueryWithPagination,
+    genericQueryOptions,
 };

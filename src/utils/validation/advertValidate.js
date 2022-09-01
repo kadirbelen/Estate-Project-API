@@ -7,6 +7,7 @@ const advertSchema = Joi.object().keys({
     price: Joi.number().required(),
     squareMeters: Joi.number().required(),
     categoryPath: Joi.string().required(),
+    type: Joi.string().required(),
     address: Joi.object().keys({
         city: Joi.string().required(),
         district: Joi.string().required(),

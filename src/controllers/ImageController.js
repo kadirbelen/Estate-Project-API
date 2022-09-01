@@ -7,6 +7,7 @@ const statusCode = require("http-status-codes").StatusCodes;
 const imagePost = async(req, res) => {
     try {
         const image = await driveService.publicUrl(req, res);
+        console.log("i", image);
         const temporary = new ImageTemporary(image);
         temporary.save();
         successResponse(res, statusCode.OK, { remoteId: temporary.remoteId });

@@ -33,9 +33,11 @@ async function uploadFile(fileObject) {
                 body: bufferStream,
             },
         });
+        console.log("da", response.data);
         return response.data;
     } catch (error) {
-        console.log(error.message);
+        console.log("deneme");
+        console.log(error);
     }
 }
 
