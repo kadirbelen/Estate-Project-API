@@ -1,9 +1,10 @@
 const errorResponse = require("../responses/errorResponse");
 const statusCode = require("http-status-codes").StatusCodes;
+const moment = require("moment");
 
 const queryOptions = (req, res, next) => {
     const sortField = req.query.sortField;
-    const sortOrder = req.query.sortOrder;
+    const sortOrder = req.query.sortOrder || 1;
 
     let pageSize = parseInt(req.query.pageSize);
     let page = parseInt(req.query.page);
@@ -34,7 +35,7 @@ const queryOptions = (req, res, next) => {
 
         if (["gt", "lt", "lte", "gte"].includes(splitedKey[1])) {
             const regex = new RegExp(
-                /^(?:\d{4})-(?:\d{2})-(?:\d{2})T(?:\d{2}):(?:\d{2}):(?:\d{2})$/
+                /^([1-2]\d{3})\-([0]\d|[1][0-2])\-([0-2]\d|[3][0-1])(?:(?:T([0-1]\d|[2][0-3])\:([0-5]\d)(?::([0-5]\d)))?)$/
             );
 
             const isValidDateFormat = regex.test(queryValue);
@@ -70,6 +71,37 @@ const queryOptions = (req, res, next) => {
                 [`$${splitedKey[1]}`]: newValue,
             };
             mongoQuery[splitedKey[0]] = queryObject;
+        } else if (["eqd"].includes(splitedKey[1])) {
+            const dateEnum = {
+                4: "year",
+                7: "month",
+                10: "day",
+                13: "hour",
+                16: "minute",
+                19: "second",
+            };
+
+            const gtValue = moment(queryValue).format("YYYY-MM-DDTHH:mm:ss");
+
+            const queryDate = new Date(gtValue);
+
+            if (!dateEnum[queryValue.length] || queryDate == "Invalid Date") {
+                return errorResponse(
+                    res,
+                    statusCode.BAD_REQUEST,
+                    "Invalid date format"
+                );
+            }
+
+            const gtObject = {
+                $gt: gtValue + ".000Z",
+            };
+            const ltObject = {
+                $lt: moment(queryValue)
+                    .add(1, dateEnum[queryValue.length])
+                    .format("YYYY-MM-DDTHH:mm:ss") + ".000Z",
+            };
+            mongoQuery[splitedKey[0]] = {...gtObject, ...ltObject };
         } else if (["eq"].includes(splitedKey[1])) {
             mongoQuery[splitedKey[0]] = queryValue;
         } else if (["is"].includes(splitedKey[1])) {
@@ -98,9 +130,14 @@ const queryOptions = (req, res, next) => {
     req.queryOptions = {
         pagination: { pageSize, page, skip },
     };
-
+    console.log("sortO", sortOrder);
+    console.log("sortF", sortField);
     if ((sortOrder == -1 || sortOrder == 1) && sortField) {
-        req.queryOptions.sorting = { sortField, sortOrder };
+        req.queryOptions.sorting = {
+            sortQuery: {
+                [sortField]: parseInt(sortOrder),
+            },
+        };
     }
 
     req.queryOptions.filtering = mongoQuery;

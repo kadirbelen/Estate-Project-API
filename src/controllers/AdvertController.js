@@ -5,6 +5,8 @@ const Advert = require("../models/Advert");
 const genericController = require("./GenericController");
 const ImageTemporary = require("../models/ImageTemporary");
 const driveService = require("../services/googleDriveService");
+const User = require("../models/User");
+const cardSchema = require("../utils/cardSchema");
 
 const advertPost = async(req, res) => {
     try {
@@ -61,6 +63,7 @@ const advertGetAll = async(req, res) => {
     await getCard(res, genericController.genericQueryOptions(req, Advert));
 };
 
+//user'ın ilanlarım kısmı
 const advertGetByUser = async(req, res) => {
     await getCard(
         res,
@@ -70,7 +73,7 @@ const advertGetByUser = async(req, res) => {
         )
     );
 };
-
+//category path için ilanları listeler
 const advertGetByCategory = async(req, res) => {
     await getCard(
         res,
@@ -84,7 +87,7 @@ const advertGetByCategory = async(req, res) => {
 };
 
 const advertUpdate = async(req, res) => {
-    await genericController.genericUpdate(req, res, Advert);
+    await genericController.genericUpdate(req.params.id, req.body, res, Advert);
 };
 
 const advertDelete = async(req, res) => {
@@ -102,6 +105,38 @@ const advertDelete = async(req, res) => {
     }
 };
 
+const addFavorite = async(req, res) => {
+    try {
+        const advert = await Advert.findById(req.params.id);
+        advert.favoriteCount += 1;
+        advert.save();
+        const user = await User.findByIdAndUpdate(
+            req.userId, {
+                $push: { favorities: advert._id },
+            }, { new: true }
+        );
+        successResponse(res, statusCode.OK, "İlan favoriye eklendi");
+    } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
+};
+
+const deleteFavorite = async(req, res) => {
+    try {
+        const advert = await Advert.findById(req.params.id);
+        advert.favoriteCount -= 1;
+        advert.save();
+        const user = await User.findByIdAndUpdate(
+            req.userId, {
+                $pull: { favorities: advert._id },
+            }, { new: true }
+        );
+        successResponse(res, statusCode.OK, "İlan favoriden çıkarıldı");
+    } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
+};
+
 //card yapısındaki field alanları için kullanıldı
 const getCard = async(res, query) => {
     try {
@@ -109,18 +144,7 @@ const getCard = async(res, query) => {
         if (error) {
             return errorResponse(res, statusCode.BAD_REQUEST, error.message);
         }
-        const cardList = list
-            .populate(["address.city", "address.town", "address.district"])
-            .select({
-                images: { $slice: ["$images", 1] },
-                title: 1,
-                price: 1,
-                address: 1,
-                squareMeters: 1,
-                type: 1,
-                createdAt: 1,
-            });
-        const data = await cardList.exec();
+        const data = await cardSchema(list);
         successResponse(res, statusCode.OK, data, {
             currentPage: page || 1,
             totalPage: parseInt(modelLength.length / pageSize) + 1 || 1,
@@ -138,4 +162,6 @@ module.exports = {
     advertGetByCategory,
     advertDelete,
     advertUpdate,
+    addFavorite,
+    deleteFavorite,
 };

@@ -1,7 +1,7 @@
 const { google } = require("googleapis");
-const fs = require("fs");
-let stream = require("stream");
-var Jimp = require("jimp");
+const Jimp = require("jimp");
+const stream = require("stream");
+const sharp = require("sharp");
 
 const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,
@@ -36,10 +36,17 @@ const drive = google.drive({
 // }
 
 //resimlerin üzerine logo ekleme
-async function waterMark(fileObject) {
+
+/*
+sharp(input)
+  .toBuffer()
+  .then(data => { ... })
+  .catch(err => { ... });
+  */
+async function waterMark(fileObject, buffer) {
     let watermark = await Jimp.read("uploads\\rentiz.png");
-    watermark = watermark.resize(100, 100);
-    const image = await Jimp.read(fileObject.buffer);
+    watermark = watermark.resize(200, 200);
+    const image = await Jimp.read(buffer);
     image.composite(watermark, 0, 0, {
         mode: Jimp.BLEND_SOURCE_OVER,
         opacityDest: 1,
@@ -52,14 +59,22 @@ async function waterMark(fileObject) {
     return bufferImage;
 }
 
+async function qualityOptions(fileObject) {
+    const buffer = await sharp(fileObject.buffer)
+        .jpeg({ quality: 30, mozjpeg: true })
+        .toBuffer();
+    return buffer;
+}
+
 async function uploadFile(fileObject) {
     try {
-        const buffer = await waterMark(fileObject);
+        const { buffer } = await qualityOptions(fileObject);
+        const imageFiligran = await waterMark(fileObject, buffer);
         var folderId = "1hFKDwve9yGDUgmLaByVun_kaSzJmi8S9";
         var bufferStream = new stream.PassThrough();
-        bufferStream.end(buffer);
+        bufferStream.end(imageFiligran);
         var mimeType = fileObject.mimetype;
-        var fileName = Date.now() + "-" + fileObject.originalname;
+        var fileName = Date.now() + "-" + `${fileObject.originalname}`;
         const response = await drive.files.create({
             requestBody: {
                 name: fileName,
@@ -73,7 +88,6 @@ async function uploadFile(fileObject) {
         });
         return response.data;
     } catch (error) {
-        console.log("deneme");
         console.log(error);
     }
 }
@@ -107,9 +121,6 @@ async function publicUrl(req, res) {
         const imageUrl = await result.data.webContentLink.split(
             "&export=download"
         )[0];
-
-        // await textOverlay(imageUrl);
-        // console.log("url", imageUrl);
 
         const response = { remoteId: data.id, url: imageUrl, name: data.name };
         return response;

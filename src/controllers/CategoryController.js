@@ -9,7 +9,7 @@ const categoryPost = async(req, res) => {
 };
 
 const categoryUpdate = async(req, res) => {
-    await genericController.genericUpdate(req, res, Category);
+    await genericController.genericUpdate(req.params.id, req.body, res, Category);
 };
 
 const getSubCategory = async(req, res) => {
@@ -22,11 +22,6 @@ const getSubCategory = async(req, res) => {
         const tree = await parent.getChildrenTree({
             options: { lean: false },
         });
-        // var array = [];
-        // tree.map((item) => {
-        //     array.push({ id: item._id, categoryName: item.categoryName });
-        // });
-
         successResponse(res, statusCode.OK, tree);
     } catch (error) {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);

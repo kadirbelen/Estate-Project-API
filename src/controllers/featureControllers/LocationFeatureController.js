@@ -6,7 +6,12 @@ const locationPost = async(req, res) => {
 };
 
 const locationUpdate = async(req, res) => {
-    await genericController.genericUpdate(req, res, LocationFeature);
+    await genericController.genericUpdate(
+        req.params.id,
+        req.body,
+        res,
+        LocationFeature
+    );
 };
 
 const locationGet = async(req, res) => {

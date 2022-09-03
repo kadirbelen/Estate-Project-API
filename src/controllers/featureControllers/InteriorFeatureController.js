@@ -6,7 +6,12 @@ const interiorPost = async(req, res) => {
 };
 
 const interiorUpdate = async(req, res) => {
-    await genericController.genericUpdate(req, res, InteriorFeature);
+    await genericController.genericUpdate(
+        req.params.id,
+        req.body,
+        res,
+        InteriorFeature
+    );
 };
 
 const interiorGet = async(req, res) => {

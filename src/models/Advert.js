@@ -15,7 +15,8 @@ const AdvertSchema = new mongoose.Schema({
     description: { type: String, required: true, min: 30, max: 500 },
     price: { type: Number, required: true },
     squareMeters: { type: Number, required: true },
-    categoryPath: { type: String },
+    categoryPath: { type: String, required: true },
+    favoriteCount: { type: Number, default: 0 },
     type: { type: String, required: true },
     address: {
         city: {
@@ -54,12 +55,6 @@ const AdvertSchema = new mongoose.Schema({
     itemStatus: { type: String },
     landStatus: { type: String },
     parcel: { type: Number },
-    roomCount: { type: String },
-    netSquareMeters: { type: Number },
-    buildingAge: { type: String },
-    floor: { type: Number },
-    heatingType: { type: String },
-    itemStatus: { type: String },
 }, {
     versionKey: false,
     timestamps: true,

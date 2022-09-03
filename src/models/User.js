@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    favorities: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Advert",
+    },
 }, {
     versionKey: false,
     timestamps: true,

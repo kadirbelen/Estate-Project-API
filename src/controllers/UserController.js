@@ -8,6 +8,7 @@ const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 const statusCode = require("http-status-codes").StatusCodes;
 const genericController = require("./GenericController");
+const cardSchema = require("../utils/cardSchema");
 
 const registerController = async(req, res) => {
     const salt = bcrypt.genSaltSync(10);
@@ -109,9 +110,39 @@ const logout = async(req, res) => {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
+// select: "images title price address squareMeters type createdAt",
+// const user = await User.findOne({ _id: req.userId }).populate({
+//     path: "favorities",
+//     select: {
+//         images: { $slice: ["$images", 1] },
+//         title: 1,
+//         price: 1,
+//         address: 1,
+//         squareMeters: 1,
+//         type: 1,
+//         createdAt: 1,
+//     },
+//     populate: {
+//         path: "address.city address.town address.district",
+//     },
+// });
 const userProfile = async(req, res) => {
     try {
-        const user = await User.findOne({ _id: req.userId });
+        const user = await User.findOne({ _id: req.userId }).populate({
+            path: "favorities",
+            select: {
+                images: { $slice: ["$images", 1] },
+                title: 1,
+                price: 1,
+                address: 1,
+                squareMeters: 1,
+                type: 1,
+                createdAt: 1,
+            },
+            populate: {
+                path: "address.city address.town address.district",
+            },
+        });
         successResponse(res, statusCode.OK, user);
     } catch (error) {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
@@ -119,7 +150,7 @@ const userProfile = async(req, res) => {
 };
 ////????
 const userUpdate = async(req, res) => {
-    await genericController.genericUpdate(req.userId, res, User);
+    await genericController.genericUpdate(req.userId, req.body, res, User);
 };
 
 const userPasswordUpdate = async(req, res) => {

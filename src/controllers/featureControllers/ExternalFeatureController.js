@@ -6,7 +6,12 @@ const externalPost = async(req, res) => {
 };
 
 const externalUpdate = async(req, res) => {
-    await genericController.genericUpdate(req, res, ExternalFeature);
+    await genericController.genericUpdate(
+        req.params.id,
+        req.body,
+        res,
+        ExternalFeature
+    );
 };
 
 const externalGet = async(req, res) => {

@@ -37,6 +37,16 @@ router.get(
 router.get("/:id", advertController.advertGetById);
 router.get("/", queryOptions, advertController.advertGetAll);
 router.patch("/:id", advertController.advertUpdate);
+router.patch(
+    "/favorite/:id",
+    authToken.verifyAndAuthorizationToken(["user"]),
+    advertController.addFavorite
+);
+router.patch(
+    "/unfavorite/:id",
+    authToken.verifyAndAuthorizationToken(["user"]),
+    advertController.deleteFavorite
+);
 router.delete("/:id", advertController.advertDelete);
 
 module.exports = router;
