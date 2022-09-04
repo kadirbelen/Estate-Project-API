@@ -798,7 +798,7 @@
                               "$ref": "#/paths/~1adverts~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
                             },
                             {
-                              "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                              "$ref": "#/components/schemas/profile/allOf/1/properties/data/allOf/1/properties/favorities/items/allOf/0"
                             },
                             {
                               "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
@@ -911,6 +911,12 @@
                         "description": "Advert category path",
                         "type": "string",
                         "example": "62ed69679c045c97a63390a4,62ed69679c045c97a63390a4,62ed69679c045c97a63390a4"
+                      },
+                      "favoriCount": {
+                        "title": "Advert favori count",
+                        "description": "Advert favori count",
+                        "type": "number",
+                        "example": 1
                       },
                       "createdAt": {
                         "title": "Advert create date",
@@ -1036,7 +1042,7 @@
                               }
                             },
                             {
-                              "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                              "$ref": "#/components/schemas/profile/allOf/1/properties/data/allOf/1/properties/favorities/items/allOf/0"
                             },
                             {
                               "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
@@ -1141,7 +1147,7 @@
                               "$ref": "#/paths/~1adverts~1land/post/responses/200/content/application~1json/schema/allOf/1/properties/data/allOf/0"
                             },
                             {
-                              "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                              "$ref": "#/components/schemas/profile/allOf/1/properties/data/allOf/1/properties/favorities/items/allOf/0"
                             },
                             {
                               "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
@@ -1197,6 +1203,15 @@
           },
           {
             "$ref": "#/paths/~1adverts/get/parameters/1"
+          },
+          {
+            "$ref": "#/paths/~1adverts/get/parameters/2"
+          },
+          {
+            "$ref": "#/paths/~1adverts/get/parameters/3"
+          },
+          {
+            "$ref": "#/paths/~1adverts/get/parameters/4"
           }
         ],
         "security": [
@@ -1292,7 +1307,7 @@
                                   }
                                 },
                                 {
-                                  "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                                  "$ref": "#/components/schemas/profile/allOf/1/properties/data/allOf/1/properties/favorities/items/allOf/0"
                                 },
                                 {
                                   "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
@@ -1415,7 +1430,7 @@
                                   "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/0"
                                 },
                                 {
-                                  "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                                  "$ref": "#/components/schemas/profile/allOf/1/properties/data/allOf/1/properties/favorities/items/allOf/0"
                                 },
                                 {
                                   "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
@@ -1449,7 +1464,7 @@
                                   "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/0"
                                 },
                                 {
-                                  "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema/allOf/2/properties/data/allOf/0"
+                                  "$ref": "#/components/schemas/profile/allOf/1/properties/data/allOf/1/properties/favorities/items/allOf/0"
                                 },
                                 {
                                   "$ref": "#/paths/~1adverts~1land/post/requestBody/content/application~1json/schema/allOf/1"
@@ -1551,6 +1566,58 @@
             },
             "required": false,
             "description": ""
+          },
+          {
+            "in": "query",
+            "name": "props",
+            "description": "Query key fields can be fieldName.(eq,eqd,gt,lt,lte) ",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "roomCount.eq": {
+                  "type": "string",
+                  "example": "3+1"
+                },
+                "createdAt.eqd": {
+                  "type": "string",
+                  "example": "2023 & 2023-03 & 2023-03-12 & 2023-03-12T18 & 2023-03-12T18:20 & 2023-03-12T18:20:45"
+                },
+                "price.gt": {
+                  "type": "string",
+                  "example": "250000"
+                },
+                "price.lt": {
+                  "type": "string",
+                  "example": "300000"
+                },
+                "squareMeters.gte": {
+                  "type": "string",
+                  "example": "150"
+                },
+                "squareMeters.lte": {
+                  "type": "string",
+                  "example": "200"
+                }
+              }
+            },
+            "style": "form",
+            "explode": true
+          },
+          {
+            "name": "sortField",
+            "in": "query",
+            "description": "Advert field name for sorting",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sorting number (-1 | 1)",
+            "schema": {
+              "type": "number"
+            }
           }
         ],
         "responses": {
@@ -1591,89 +1658,10 @@
                         "data": {
                           "allOf": [
                             {
-                              "type": "object",
-                              "properties": {
-                                "images": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "object",
-                                    "properties": {
-                                      "remoteId": {
-                                        "title": "advert image remote id",
-                                        "description": "advert image remote id",
-                                        "type": "string",
-                                        "example": "1ZLbwUBucwCK0NIcWQEQZabU58wL8erNw"
-                                      },
-                                      "url": {
-                                        "title": "advert image url",
-                                        "description": "advert image url",
-                                        "type": "string",
-                                        "example": "https://drive.google.com/uc?id=1ZLbwUBucwCK0NIcWQEQZabU58wL8erNw"
-                                      },
-                                      "name": {
-                                        "title": "advert image name",
-                                        "description": "advert image name",
-                                        "type": "string",
-                                        "example": "1661326388828-devere.png"
-                                      },
-                                      "_id": {
-                                        "title": "advert image id",
-                                        "description": "advert image id",
-                                        "type": "string",
-                                        "example": "6305d4431b751789052a4a9c"
-                                      }
-                                    }
-                                  }
-                                }
-                              }
+                              "$ref": "#/components/schemas/profile/allOf/1/properties/data/allOf/1/properties/favorities/items/allOf/0"
                             },
                             {
-                              "allOf": [
-                                {
-                                  "type": "object",
-                                  "properties": {
-                                    "id": {
-                                      "title": "advert id",
-                                      "description": "advert id",
-                                      "type": "string",
-                                      "example": "62ed69679c045c97a63390a4"
-                                    },
-                                    "title": {
-                                      "title": "Advert title",
-                                      "description": "Advert title",
-                                      "type": "string",
-                                      "example": "example"
-                                    },
-                                    "price": {
-                                      "title": "Advert price",
-                                      "description": "Advert price",
-                                      "type": "number",
-                                      "example": "250000"
-                                    },
-                                    "squareMeters": {
-                                      "title": "Advert squareMeters",
-                                      "description": "Advert squareMeters",
-                                      "type": "number",
-                                      "example": 150
-                                    },
-                                    "createdAt": {
-                                      "title": "Advert create date",
-                                      "description": "Advert create date",
-                                      "type": "date",
-                                      "example": "2022-08-24T14:04:52.054Z"
-                                    },
-                                    "type": {
-                                      "title": "Advert category type",
-                                      "description": "Advert category type",
-                                      "type": "string",
-                                      "example": "Arsa"
-                                    }
-                                  }
-                                },
-                                {
-                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/4"
-                                }
-                              ]
+                              "$ref": "#/components/schemas/profile/allOf/1/properties/data/allOf/1/properties/favorities/items/allOf/1"
                             }
                           ]
                         }
@@ -1768,6 +1756,90 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/paths/~1adverts/get/responses/200/content/application~1json/schema"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1adverts/get/responses/400"
+          },
+          "401": {
+            "$ref": "#/paths/~1adverts/get/responses/401"
+          },
+          "403": {
+            "$ref": "#/paths/~1adverts/get/responses/403"
+          }
+        }
+      }
+    },
+    "/adverts/favorite/{id}": {
+      "summary": "",
+      "description": "",
+      "patch": {
+        "tags": [
+          "Adverts"
+        ],
+        "summary": "Advert favorite",
+        "description": "Advert favorite",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/paths/~1adverts~1%7Bid%7D/get/parameters/0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Advert favorite successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/login/allOf/0"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/paths/~1adverts/get/responses/400"
+          },
+          "401": {
+            "$ref": "#/paths/~1adverts/get/responses/401"
+          },
+          "403": {
+            "$ref": "#/paths/~1adverts/get/responses/403"
+          }
+        }
+      }
+    },
+    "/adverts/unfavorite/{id}": {
+      "summary": "",
+      "description": "",
+      "patch": {
+        "tags": [
+          "Adverts"
+        ],
+        "summary": "Advert unfavorite",
+        "description": "Advert unfavorite",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/paths/~1adverts~1%7Bid%7D/get/parameters/0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Advert unfavorite successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/login/allOf/0"
                 }
               }
             }
@@ -2063,38 +2135,145 @@
             "type": "object",
             "properties": {
               "data": {
-                "type": "object",
-                "properties": {
-                  "userName": {
-                    "title": "UserName",
-                    "description": "UserName",
-                    "type": "string",
-                    "example": "string"
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "userName": {
+                        "title": "UserName",
+                        "description": "UserName",
+                        "type": "string",
+                        "example": "string"
+                      },
+                      "email": {
+                        "title": "User email",
+                        "description": "User's email",
+                        "type": "string",
+                        "example": "deneme@gmail.com"
+                      },
+                      "password": {
+                        "title": "User password",
+                        "description": "User's password",
+                        "type": "string",
+                        "minLength": 8,
+                        "example": "Kb12345*"
+                      },
+                      "role": {
+                        "title": "User role",
+                        "description": "User's role",
+                        "type": "string"
+                      },
+                      "verified": {
+                        "title": "User verified",
+                        "description": "User's verified",
+                        "type": "boolean"
+                      }
+                    }
                   },
-                  "email": {
-                    "title": "User email",
-                    "description": "User's email",
-                    "type": "string",
-                    "example": "deneme@gmail.com"
-                  },
-                  "password": {
-                    "title": "User password",
-                    "description": "User's password",
-                    "type": "string",
-                    "minLength": 8,
-                    "example": "Kb12345*"
-                  },
-                  "role": {
-                    "title": "User role",
-                    "description": "User's role",
-                    "type": "string"
-                  },
-                  "verified": {
-                    "title": "User verified",
-                    "description": "User's verified",
-                    "type": "boolean"
+                  {
+                    "type": "object",
+                    "properties": {
+                      "favorities": {
+                        "type": "array",
+                        "items": {
+                          "allOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "images": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "remoteId": {
+                                        "title": "advert image remote id",
+                                        "description": "advert image remote id",
+                                        "type": "string",
+                                        "example": "1ZLbwUBucwCK0NIcWQEQZabU58wL8erNw"
+                                      },
+                                      "url": {
+                                        "title": "advert image url",
+                                        "description": "advert image url",
+                                        "type": "string",
+                                        "example": "https://drive.google.com/uc?id=1ZLbwUBucwCK0NIcWQEQZabU58wL8erNw"
+                                      },
+                                      "name": {
+                                        "title": "advert image name",
+                                        "description": "advert image name",
+                                        "type": "string",
+                                        "example": "1661326388828-devere.png"
+                                      },
+                                      "_id": {
+                                        "title": "advert image id",
+                                        "description": "advert image id",
+                                        "type": "string",
+                                        "example": "6305d4431b751789052a4a9c"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "allOf": [
+                                {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "title": "advert id",
+                                      "description": "advert id",
+                                      "type": "string",
+                                      "example": "62ed69679c045c97a63390a4"
+                                    },
+                                    "title": {
+                                      "title": "Advert title",
+                                      "description": "Advert title",
+                                      "type": "string",
+                                      "example": "example"
+                                    },
+                                    "price": {
+                                      "title": "Advert price",
+                                      "description": "Advert price",
+                                      "type": "number",
+                                      "example": "250000"
+                                    },
+                                    "squareMeters": {
+                                      "title": "Advert squareMeters",
+                                      "description": "Advert squareMeters",
+                                      "type": "number",
+                                      "example": 150
+                                    },
+                                    "favoriCount": {
+                                      "title": "Advert favori count",
+                                      "description": "Advert favori count",
+                                      "type": "number",
+                                      "example": 1
+                                    },
+                                    "createdAt": {
+                                      "title": "Advert create date",
+                                      "description": "Advert create date",
+                                      "type": "date",
+                                      "example": "2022-08-24T14:04:52.054Z"
+                                    },
+                                    "type": {
+                                      "title": "Advert category type",
+                                      "description": "Advert category type",
+                                      "type": "string",
+                                      "example": "Arsa"
+                                    }
+                                  }
+                                },
+                                {
+                                  "$ref": "#/paths/~1adverts~1%7Bid%7D/get/responses/200/content/application~1json/schema/oneOf/0/allOf/1/properties/data/allOf/4"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
                   }
-                }
+                ]
               }
             }
           }

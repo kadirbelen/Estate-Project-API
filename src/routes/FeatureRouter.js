@@ -1,20 +1,18 @@
 const express = require("express");
 const router = express.Router();
 
-const locationController = require("../controllers/featureControllers/LocationFeatureController");
-const externalController = require("../controllers/featureControllers/ExternalFeatureController");
-const interiorController = require("../controllers/featureControllers/InteriorFeatureController");
+const featureController = require("../controllers/FeatureController");
 
-router.post("/interior", interiorController.interiorPost);
-router.get("/interior", interiorController.interiorGet);
-router.patch("/interior/:id", interiorController.interiorUpdate);
+router.post("/interior", featureController.interiorPost);
+router.get("/interior", featureController.interiorGet);
+router.patch("/interior/:id", featureController.interiorUpdate);
 
-router.post("/external", externalController.externalPost);
-router.get("/external", externalController.externalGet);
-router.patch("/external/:id", externalController.externalUpdate);
+router.post("/external", featureController.externalPost);
+router.get("/external", featureController.externalGet);
+router.patch("/external/:id", featureController.externalUpdate);
 
-router.post("/location", locationController.locationPost);
-router.get("/location", locationController.locationGet);
-router.patch("/location/:id", locationController.locationUpdate);
+router.post("/location", featureController.locationPost);
+router.get("/location", featureController.locationGet);
+router.patch("/location/:id", featureController.locationUpdate);
 
 module.exports = router;

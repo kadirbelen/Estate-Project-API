@@ -8,7 +8,6 @@ const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 const statusCode = require("http-status-codes").StatusCodes;
 const genericController = require("./GenericController");
-const cardSchema = require("../utils/cardSchema");
 
 const registerController = async(req, res) => {
     const salt = bcrypt.genSaltSync(10);

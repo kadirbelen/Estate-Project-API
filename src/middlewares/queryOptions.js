@@ -9,23 +9,24 @@ const queryOptions = (req, res, next) => {
     let pageSize = parseInt(req.query.pageSize);
     let page = parseInt(req.query.page);
 
+    //pageSize bilgisi var page bilgisi yoksa default page ataması yapıldı
     if (pageSize && !page) {
         page = 1;
     }
-
+    //page bilgisi var pageSize bilgisi yoksa default pageSize ataması yapıldı
     if (page && !pageSize) {
         pageSize = 10;
     }
 
+    //Özel filtremeler için liste oluşturuldu
     const blackList = ["pageSize", "page", "sortField", "sortOrder"];
 
     let mongoQuery = {};
     const keys = Object.keys(req.query);
-
     for (const key of keys) {
         const queryValue = req.query[key];
         const splitedKey = key.split(".");
-
+        //key değerini "." bilgisine göre ayırdıktan sonra uzunluğu kontrol ettik
         if (splitedKey.length !== 2) {
             if (blackList.includes(key)) {
                 continue;
@@ -55,21 +56,13 @@ const queryOptions = (req, res, next) => {
 
                 newValue = queryDate;
             } else {
-                const intValue = parseInt(queryValue);
-                if (!intValue) {
-                    return errorResponse(
-                        res,
-                        statusCode.BAD_REQUEST,
-                        "Invalid integer format"
-                    );
-                }
-
-                newValue = intValue;
+                newValue = queryValue;
             }
 
             const queryObject = {
                 [`$${splitedKey[1]}`]: newValue,
             };
+
             mongoQuery[splitedKey[0]] = queryObject;
         } else if (["eqd"].includes(splitedKey[1])) {
             const dateEnum = {
@@ -127,16 +120,14 @@ const queryOptions = (req, res, next) => {
 
     const skip = page && pageSize ? (page - 1) * pageSize : null;
 
+    //req bilgisi içine querylerimizi dahil ettik
     req.queryOptions = {
         pagination: { pageSize, page, skip },
     };
-    console.log("sortO", sortOrder);
-    console.log("sortF", sortField);
+
     if ((sortOrder == -1 || sortOrder == 1) && sortField) {
         req.queryOptions.sorting = {
-            sortQuery: {
-                [sortField]: parseInt(sortOrder),
-            },
+            [sortField]: parseInt(sortOrder),
         };
     }
 

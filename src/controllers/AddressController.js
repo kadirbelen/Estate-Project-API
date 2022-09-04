@@ -4,17 +4,17 @@ const Town = require("../models/addressModels/Town");
 const genericController = require("./GenericController");
 
 const getCity = async(req, res) => {
-    await genericController.genericGet(req, res, City);
+    await genericController.genericGet(res, City);
 };
 
 const getDistrictByCity = async(req, res) => {
-    await genericController.genericGetByQuery(req, res, District, {
+    await genericController.genericGetByQuery(res, District, {
         city: req.params.cityId,
     });
 };
 
 const getTownByDistrict = async(req, res) => {
-    await genericController.genericGetByQuery(req, res, Town, {
+    await genericController.genericGetByQuery(res, Town, {
         district: req.params.districtId,
     });
 };

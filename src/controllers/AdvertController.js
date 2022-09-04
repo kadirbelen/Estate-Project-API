@@ -6,7 +6,6 @@ const genericController = require("./GenericController");
 const ImageTemporary = require("../models/ImageTemporary");
 const driveService = require("../services/googleDriveService");
 const User = require("../models/User");
-const cardSchema = require("../utils/cardSchema");
 
 const advertPost = async(req, res) => {
     try {
@@ -67,22 +66,16 @@ const advertGetAll = async(req, res) => {
 const advertGetByUser = async(req, res) => {
     await getCard(
         res,
-        genericController.getByPrivateQueryWithPagination(
-            req, { user: req.userId },
-            Advert
-        )
+        genericController.genericQueryOptions(req, Advert, { user: req.userId })
     );
 };
 //category path için ilanları listeler
 const advertGetByCategory = async(req, res) => {
     await getCard(
         res,
-        genericController.getByPrivateQueryWithPagination(
-            req, {
-                categoryPath: new RegExp(`\^${req.params.path}`),
-            },
-            Advert
-        )
+        genericController.genericQueryOptions(req, Advert, {
+            categoryPath: new RegExp(`\^${req.params.path}`),
+        })
     );
 };
 
@@ -144,7 +137,19 @@ const getCard = async(res, query) => {
         if (error) {
             return errorResponse(res, statusCode.BAD_REQUEST, error.message);
         }
-        const data = await cardSchema(list);
+        const cardList = list
+            .populate(["address.city", "address.town", "address.district"])
+            .select({
+                images: { $slice: ["$images", 1] },
+                title: 1,
+                price: 1,
+                address: 1,
+                squareMeters: 1,
+                type: 1,
+                favoriteCount: 1,
+                createdAt: 1,
+            });
+        const data = await cardList.exec();
         successResponse(res, statusCode.OK, data, {
             currentPage: page || 1,
             totalPage: parseInt(modelLength.length / pageSize) + 1 || 1,
