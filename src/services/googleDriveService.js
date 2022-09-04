@@ -15,7 +15,7 @@ const drive = google.drive({
     version: "v3",
     auth: oauth2Client,
 });
-//text yazısı
+// text yazısı
 // var sizeOf = require("image-size");
 // async function textOverlay(fileObject) {
 //     const font = await Jimp.loadFont(Jimp.FONT_SANS_64_WHITE);
@@ -35,7 +35,7 @@ const drive = google.drive({
 //     return bufferImage;
 // }
 
-//resimlerin üzerine logo ekleme
+// resimlerin üzerine logo ekleme
 
 /*
 sharp(input)
@@ -53,8 +53,8 @@ async function waterMark(fileObject, buffer) {
         opacitySource: 0.5,
     });
     let bufferImage;
-    image.getBuffer(fileObject.mimetype, (err, buffer) => {
-        bufferImage = buffer;
+    image.getBuffer(fileObject.mimetype, (err, imageBuffer) => {
+        bufferImage = imageBuffer;
     });
     return bufferImage;
 }
@@ -70,39 +70,39 @@ async function uploadFile(fileObject) {
     try {
         const { buffer } = await qualityOptions(fileObject);
         const imageFiligran = await waterMark(fileObject, buffer);
-        var folderId = "1hFKDwve9yGDUgmLaByVun_kaSzJmi8S9";
-        var bufferStream = new stream.PassThrough();
+        const folderId = "1hFKDwve9yGDUgmLaByVun_kaSzJmi8S9";
+        const bufferStream = new stream.PassThrough();
         bufferStream.end(imageFiligran);
-        var mimeType = fileObject.mimetype;
-        var fileName = Date.now() + "-" + `${fileObject.originalname}`;
+        const mimeType = fileObject.mimetype;
+        const fileName = Date.now() + fileObject.originalname;
         const response = await drive.files.create({
             requestBody: {
                 name: fileName,
-                mimeType: mimeType,
+                mimeType,
                 parents: [folderId],
             },
             media: {
-                mimeType: mimeType,
+                mimeType,
                 body: bufferStream,
             },
         });
         return response.data;
     } catch (error) {
-        console.log(error);
+        return error;
     }
 }
 
-async function deleteFile(fileId, res) {
+async function deleteFile(fileId) {
     try {
-        const response = await drive.files.delete({
-            fileId: fileId,
+        await drive.files.delete({
+            fileId,
         });
     } catch (error) {
         console.log(error.message);
     }
 }
 
-async function publicUrl(req, res) {
+async function publicUrl(req) {
     try {
         const { file } = req;
         console.log("file", file);
@@ -125,7 +125,7 @@ async function publicUrl(req, res) {
         const response = { remoteId: data.id, url: imageUrl, name: data.name };
         return response;
     } catch (error) {
-        console.log(error.message);
+        return error;
     }
 }
 

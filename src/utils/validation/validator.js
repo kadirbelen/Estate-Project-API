@@ -1,13 +1,13 @@
 const userSchema = require("./userValidate");
 const advertSchema = require("./advertValidate");
 
-const loginSchema = userSchema.loginSchema;
-const registerSchema = userSchema.registerSchema;
-const passwordChangeSchema = userSchema.passwordChangeSchema;
+const { loginSchema } = userSchema;
+const { registerSchema } = userSchema;
+const { passwordChangeSchema } = userSchema;
 
-const landSchema = advertSchema.landSchema;
-const workPlaceSchema = advertSchema.workPlaceSchema;
-const housingSchema = advertSchema.housingSchema;
+const { landSchema } = advertSchema;
+const { workPlaceSchema } = advertSchema;
+const { housingSchema } = advertSchema;
 
 module.exports = {
     loginSchema,

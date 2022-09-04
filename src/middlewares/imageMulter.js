@@ -1,12 +1,13 @@
+const statusCode = require("http-status-codes").StatusCodes;
 const multer = require("multer");
 const errorResponse = require("../responses/errorResponse");
-const statusCode = require("http-status-codes").StatusCodes;
+
 const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 },
 }).single("image");
 
-const imageUpload = async(req, res, next) => {
-    upload(req, res, function(err) {
+const imageUpload = async (req, res, next) => {
+    upload(req, res, (err) => {
         if (err) {
             return errorResponse(
                 res,
@@ -14,7 +15,7 @@ const imageUpload = async(req, res, next) => {
                 "Image size or format wrong"
             );
         }
-        next();
+        return next();
     });
 };
 

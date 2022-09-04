@@ -1,0 +1,24 @@
+{
+    "env": {
+        "commonjs": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": ["airbnb-base", "prettier"],
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "plugins": ["prettier"],
+    "rules": {
+        "no-restricted-syntax": ["off", "ForInStatement", "LabeledStatement", "WithStatement"],
+        "no-await-in-loop":"off",
+        "no-underscore-dangle":"off",
+        "no-continue":"warn",
+        "eqeqeq":"off",
+        "no-console":"off",
+        "prefer-regex-literals":"off",
+        "indent": ["error", 4]
+        
+   
+  }
+}

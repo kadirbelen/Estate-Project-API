@@ -1,10 +1,10 @@
+const statusCode = require("http-status-codes").StatusCodes;
 const ImageTemporary = require("../models/ImageTemporary");
 const driveService = require("../services/googleDriveService");
 const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
-const statusCode = require("http-status-codes").StatusCodes;
 
-const imagePost = async(req, res) => {
+const imagePost = async (req, res) => {
     try {
         const image = await driveService.publicUrl(req, res);
         const temporary = new ImageTemporary(image);
@@ -15,7 +15,7 @@ const imagePost = async(req, res) => {
     }
 };
 
-const imageDelete = async(req, res) => {
+const imageDelete = async (req, res) => {
     try {
         console.log("idi", req.params.remoteId);
         await driveService.deleteFile(req.params.remoteId, res);

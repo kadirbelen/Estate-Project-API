@@ -1,26 +1,33 @@
+const statusCode = require("http-status-codes").StatusCodes;
 const Category = require("../models/Category");
 const genericController = require("./GenericController");
 const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
-const statusCode = require("http-status-codes").StatusCodes;
 
-const categoryPost = async(req, res) => {
+const categoryPost = async (req, res) => {
     await genericController.genericPost(req, res, Category);
 };
 
-const categoryUpdate = async(req, res) => {
-    await genericController.genericUpdate(req.params.id, req.body, res, Category);
+const categoryUpdate = async (req, res) => {
+    await genericController.genericUpdate(
+        req.params.id,
+        req.body,
+        res,
+        Category
+    );
 };
 
-const getSubCategory = async(req, res) => {
+const getSubCategory = async (req, res) => {
     try {
         /**
          * 1-Category_id gelir ve o category bulunur
          * 2-o category altındaki diğer kategoriler getirilir
          */
-        const parent = await Category.findOne({ _id: "62fc9366a33fe6e0a145ea38" });
+        const parent = await Category.findOne({
+            _id: "62fc9366a33fe6e0a145ea38"
+        });
         const tree = await parent.getChildrenTree({
-            options: { lean: false },
+            options: { lean: false }
         });
         successResponse(res, statusCode.OK, tree);
     } catch (error) {

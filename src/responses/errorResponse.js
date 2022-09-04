@@ -1,7 +1,7 @@
 const errorResponse = (res, statusCode, message) => {
     res.status(statusCode).json({
         success: false,
-        statusCode: statusCode,
+        statusCode,
         error: {
             message,
         },

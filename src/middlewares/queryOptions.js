@@ -1,32 +1,33 @@
-const errorResponse = require("../responses/errorResponse");
+/* eslint-disable no-useless-escape */
 const statusCode = require("http-status-codes").StatusCodes;
 const moment = require("moment");
+const errorResponse = require("../responses/errorResponse");
 
 const queryOptions = (req, res, next) => {
-    const sortField = req.query.sortField;
+    const { sortField } = req.query;
     const sortOrder = req.query.sortOrder || 1;
 
-    let pageSize = parseInt(req.query.pageSize);
-    let page = parseInt(req.query.page);
+    let pageSize = parseInt(req.query.pageSize, 10);
+    let page = parseInt(req.query.page, 10);
 
-    //pageSize bilgisi var page bilgisi yoksa default page ataması yapıldı
+    // pageSize bilgisi var page bilgisi yoksa default page ataması yapıldı
     if (pageSize && !page) {
         page = 1;
     }
-    //page bilgisi var pageSize bilgisi yoksa default pageSize ataması yapıldı
+    // page bilgisi var pageSize bilgisi yoksa default pageSize ataması yapıldı
     if (page && !pageSize) {
         pageSize = 10;
     }
 
-    //Özel filtremeler için liste oluşturuldu
+    // Özel filtremeler için liste oluşturuldu
     const blackList = ["pageSize", "page", "sortField", "sortOrder"];
 
-    let mongoQuery = {};
+    const mongoQuery = {};
     const keys = Object.keys(req.query);
     for (const key of keys) {
         const queryValue = req.query[key];
         const splitedKey = key.split(".");
-        //key değerini "." bilgisine göre ayırdıktan sonra uzunluğu kontrol ettik
+        // key değerini "." bilgisine göre ayırdıktan sonra uzunluğu kontrol ettik
         if (splitedKey.length !== 2) {
             if (blackList.includes(key)) {
                 continue;
@@ -60,7 +61,7 @@ const queryOptions = (req, res, next) => {
             }
 
             const queryObject = {
-                [`$${splitedKey[1]}`]: newValue,
+                [`$${splitedKey[1]}`]: newValue
             };
 
             mongoQuery[splitedKey[0]] = queryObject;
@@ -71,7 +72,7 @@ const queryOptions = (req, res, next) => {
                 10: "day",
                 13: "hour",
                 16: "minute",
-                19: "second",
+                19: "second"
             };
 
             const gtValue = moment(queryValue).format("YYYY-MM-DDTHH:mm:ss");
@@ -87,18 +88,18 @@ const queryOptions = (req, res, next) => {
             }
 
             const gtObject = {
-                $gt: gtValue + ".000Z",
+                $gt: `${gtValue}.000Z`
             };
             const ltObject = {
-                $lt: moment(queryValue)
+                $lt: `${moment(queryValue)
                     .add(1, dateEnum[queryValue.length])
-                    .format("YYYY-MM-DDTHH:mm:ss") + ".000Z",
+                    .format("YYYY-MM-DDTHH:mm:ss")}.000Z`
             };
-            mongoQuery[splitedKey[0]] = {...gtObject, ...ltObject };
+            mongoQuery[splitedKey[0]] = { ...gtObject, ...ltObject };
         } else if (["eq"].includes(splitedKey[1])) {
             mongoQuery[splitedKey[0]] = queryValue;
         } else if (["is"].includes(splitedKey[1])) {
-            mongoQuery[splitedKey[0]] = queryValue ? true : false;
+            mongoQuery[splitedKey[0]] = !!queryValue;
         } else if (["in"].includes(splitedKey[1])) {
             const values = queryValue.split(",");
 
@@ -120,20 +121,20 @@ const queryOptions = (req, res, next) => {
 
     const skip = page && pageSize ? (page - 1) * pageSize : null;
 
-    //req bilgisi içine querylerimizi dahil ettik
+    // req bilgisi içine querylerimizi dahil ettik
     req.queryOptions = {
-        pagination: { pageSize, page, skip },
+        pagination: { pageSize, page, skip }
     };
 
     if ((sortOrder == -1 || sortOrder == 1) && sortField) {
         req.queryOptions.sorting = {
-            [sortField]: parseInt(sortOrder),
+            [sortField]: parseInt(sortOrder, 10)
         };
     }
 
     req.queryOptions.filtering = mongoQuery;
 
-    next();
+    return next();
 };
 
 module.exports = queryOptions;

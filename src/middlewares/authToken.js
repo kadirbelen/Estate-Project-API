@@ -1,7 +1,7 @@
+const statusCode = require("http-status-codes").StatusCodes;
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const errorResponse = require("../responses/errorResponse");
-const statusCode = require("http-status-codes").StatusCodes;
 
 function verifyToken(req, res, next) {
     try {
@@ -33,41 +33,22 @@ function verifyToken(req, res, next) {
 }
 
 function verifyAndAuthorizationToken(roles) {
-    try {
-        console.log("roles", roles);
-        return (req, res, next) => {
-            verifyToken(req, res, async() => {
-                const user = await User.findById(req.userId);
-                console.log("user", user);
-                const role = roles.every((item) => {
-                    return item.includes(user.role);
-                });
-                if (role) {
-                    next();
-                } else {
-                    errorResponse(
-                        res,
-                        statusCode.FORBIDDEN,
-                        "You don't have permission for this action"
-                    );
-                }
-            });
-        };
-    } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
-    }
+    return (req, res, next) => {
+        verifyToken(req, res, async () => {
+            const user = await User.findById(req.userId);
+            console.log("user", user);
+            const role = roles.every((item) => item.includes(user.role));
+            if (role) {
+                next();
+            } else {
+                errorResponse(
+                    res,
+                    statusCode.FORBIDDEN,
+                    "You don't have permission for this action"
+                );
+            }
+        });
+    };
 }
 
 module.exports = { verifyToken, verifyAndAuthorizationToken };
-
-// for (let i = 0; i < roles.length; i++) {
-//     if (roles[i].includes(user.role)) {
-//         next();
-//     } else {
-//         errorResponse(
-//             res,
-//             statusCode.FORBIDDEN,
-//             "You don't have permission for this action"
-//         );
-//     }
-// }

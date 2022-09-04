@@ -1,8 +1,7 @@
 const nodemailer = require("nodemailer");
-const path = require("path");
 const hbs = require("nodemailer-express-handlebars");
 
-const sendEmail = async(user, subject, text) => {
+const sendEmail = async (user, subject, text) => {
     try {
         const transporter = nodemailer.createTransport({
             service: "gmail",
@@ -13,7 +12,7 @@ const sendEmail = async(user, subject, text) => {
             },
         });
 
-        handlebarOptions = {
+        const handlebarOptions = {
             viewEngine: {
                 extName: ".hbs",
                 partialsDir: "src/views/emails",
@@ -27,7 +26,7 @@ const sendEmail = async(user, subject, text) => {
         await transporter.sendMail({
             from: process.env.GMAIL,
             to: user.email,
-            subject: subject,
+            subject,
             template: "emailVerify",
             context: {
                 userName: user.userName,
