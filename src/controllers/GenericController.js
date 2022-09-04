@@ -1,9 +1,9 @@
 const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 const statusCode = require("http-status-codes").StatusCodes;
-const ImageTemporary = require("../models/ImageTemporary");
 
-const genericGet = async(req, res, model) => {
+//sorgulama ihtiyacı duyulmayan veriler için (iç-dış özellik // illeri getirmek)
+const genericGet = async(res, model) => {
     try {
         const newModel = await model.find();
         successResponse(res, statusCode.OK, newModel);
@@ -12,7 +12,8 @@ const genericGet = async(req, res, model) => {
     }
 };
 
-const genericGetByQuery = async(req, res, model, query) => {
+//karmaşık olmayan sorgular için(ile göre ilçe getirme--)
+const genericGetByQuery = async(res, model, query) => {
     try {
         const newModel = await model.find(query);
         successResponse(res, statusCode.OK, newModel);
@@ -21,7 +22,8 @@ const genericGetByQuery = async(req, res, model, query) => {
     }
 };
 
-const genericGetByQueryPopulate = async(req, res, model, query, populate) => {
+//ilan detayı gibi liste(array) olmayan ancak populate kullanılacak sorgular için
+const genericGetByQueryPopulate = async(res, model, query, populate) => {
     try {
         const newModel = await model.find(query).populate(populate);
         successResponse(res, statusCode.OK, newModel);
@@ -29,28 +31,20 @@ const genericGetByQueryPopulate = async(req, res, model, query, populate) => {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
-//query options middleware den gelen queryler için genel yapı oluşturuldu
-const genericQueryOptions = async(req, model) => {
+//middleware üzerinden gelen query bilgilerine göre sorgulama yapar
+const genericQueryOptions = async(req, model, query) => {
     try {
-        console.log("order", req.queryOptions);
+        if (query) {
+            req.queryOptions.filtering = {...req.queryOptions.filtering, ...query };
+        }
+        console.log("query", req.queryOptions.filtering);
         const { pageSize, page, skip } = req.queryOptions.pagination;
         const modelLength = await model.find(req.queryOptions.filtering);
         const list = model
             .find(req.queryOptions.filtering)
             .limit(pageSize)
             .skip(skip)
-            .sort(req.queryOptions.sorting.sortQuery);
-        return { list, modelLength, page, pageSize };
-    } catch (error) {
-        return { error };
-    }
-};
-//query options middleware den pagination yapısı kullanıldı. (özel queryler ve parametreler için oluşturuldu.Örneğin kategori path bilgisine göre sorgulamak)
-const getByPrivateQueryWithPagination = async(req, query, model) => {
-    try {
-        const { pageSize, page, skip } = req.queryOptions.pagination;
-        const modelLength = await model.find(query);
-        const list = model.find(query).limit(pageSize).skip(skip);
+            .sort(req.queryOptions.sorting);
         return { list, modelLength, page, pageSize };
     } catch (error) {
         return { error };
@@ -94,6 +88,5 @@ module.exports = {
     genericGet,
     genericGetByQuery,
     genericGetByQueryPopulate,
-    getByPrivateQueryWithPagination,
     genericQueryOptions,
 };
