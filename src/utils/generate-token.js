@@ -13,7 +13,9 @@ const generateToken = async(user) => {
         });
 
         const userToken = await UserToken.findOne({ userId: user._id });
-        if (userToken) await userToken.remove();
+        if (userToken) {
+            await userToken.remove();
+        }
 
         await new UserToken({
             userId: user._id,
@@ -27,4 +29,15 @@ const generateToken = async(user) => {
     }
 };
 
-module.exports = generateToken;
+const emailGenerateToken = async(user) => {
+    try {
+        const payload = { _id: user._id };
+        const emailToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN);
+
+        return { emailToken };
+    } catch (error) {
+        return { error };
+    }
+};
+
+module.exports = { generateToken, emailGenerateToken };

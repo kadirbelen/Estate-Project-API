@@ -10,14 +10,20 @@ const sendEmail = require("../services/email");
 const genericController = require("./generic");
 
 const registerController = async(req, res) => {
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(req.body.password, salt);
-
     try {
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(req.body.password, salt);
+
         const user = new User({...req.body, password: hash });
         await user.save();
 
-        const actionUrl = `${process.env.BASE_URL}user/verify/${user.id}`; //token geçici
+        const { emailToken, error } = await generateToken.emailGenerateToken(user);
+        console.log("t", emailToken);
+        if (error) {
+            errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        }
+        const actionUrl = `${process.env.BASE_URL}users/verify/${emailToken}`;
+
         await sendEmail(user, "Email Doğrulama", actionUrl);
         successResponse(res, statusCode.OK, user);
     } catch (error) {
@@ -40,14 +46,11 @@ const loginController = async(req, res) => {
             return;
         }
         const isValid = bcrypt.compareSync(password, user.password);
-        console.log("ps", password);
-        console.log("up", user.password);
-        console.log(isValid);
         if (!isValid) {
             errorResponse(res, statusCode.BAD_REQUEST, "Invalid email or password");
             return;
         }
-        const token = await generateToken(user);
+        const token = await generateToken.generateToken(user);
         successResponse(res, statusCode.OK, token);
     } catch (error) {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
@@ -85,11 +88,18 @@ const refreshToken = async(req, res) => {
 
 const emailVerification = async(req, res) => {
     try {
-        // TODO:Gereksiz query
-        // const user = await User.findById(req.params.id);
-        // if (!user)
-        //     return errorResponse(res, statusCode.BAD_REQUEST, "Invalid link");
-        await User.findByIdAndUpdate(req.params.id, { verified: true });
+        let userId;
+        console.log("token", req.params.token);
+        jwt.verify(req.params.token, process.env.JWT_ACCESS_TOKEN, (err, decoded) => {
+            console.log("decoded", decoded);
+            if (err) {
+                errorResponse(res, statusCode.BAD_REQUEST, "Token is not valid");
+                return;
+            }
+            userId = decoded._id;
+        });
+        console.log("id", userId);
+        await User.findByIdAndUpdate(userId, { verified: true });
         successResponse(
             res,
             statusCode.OK,

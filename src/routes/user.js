@@ -22,7 +22,7 @@ router.delete(
     authToken.verifyAndAuthorizationToken(["user,admin"]),
     userController.logout
 );
-router.get("/verify/:id", userController.emailVerification);
+router.get("/verify/:token", userController.emailVerification);
 
 router.put(
     "/updateUser",
