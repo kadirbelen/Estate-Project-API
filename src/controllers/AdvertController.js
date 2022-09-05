@@ -75,20 +75,27 @@ const advertPost = async(req, res) => {
 };
 
 const advertGetById = async(req, res) => {
-    await genericController.genericGetByQueryPopulate(
-        res,
-        Advert, {
-            _id: req.params.id,
-        }, [
-            "user",
-            "address.city",
-            "address.town",
-            "address.district",
-            "interiorFeatures",
-            "externalFeatures",
-            "locationFeatures",
-        ]
-    );
+    try {
+        const { error, newModel } = await genericController.genericGetByQueryPopulate(
+            Advert, {
+                _id: req.params.id,
+            }, [
+                "user",
+                "address.city",
+                "address.town",
+                "address.district",
+                "interiorFeatures",
+                "externalFeatures",
+                "locationFeatures",
+            ]
+        );
+        if (error) {
+            errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        }
+        successResponse(res, statusCode.OK, newModel);
+    } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
 };
 
 // tüm ilanları listeler ve aynı zamanda query bilgisine görede filtreleme yapabilir
@@ -115,7 +122,19 @@ const advertGetByCategory = async(req, res) => {
 };
 
 const advertUpdate = async(req, res) => {
-    await genericController.genericUpdate(req.params.id, req.body, res, Advert);
+    try {
+        const { error, newModel } = await genericController.genericUpdate(
+            req.params.id,
+            req.body,
+            Advert
+        );
+        if (error) {
+            errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        }
+        successResponse(res, statusCode.OK, newModel);
+    } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
 };
 
 const advertDelete = async(req, res) => {
@@ -137,7 +156,7 @@ const addFavorite = async(req, res) => {
     try {
         const advert = await Advert.findById(req.params.id);
         advert.favoriteCount += 1;
-        advert.save();
+        await advert.save();
         await User.findByIdAndUpdate(
             req.userId, {
                 $push: { favorities: advert._id },

@@ -3,32 +3,32 @@ const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 
 // sorgulama ihtiyacı duyulmayan veriler için (iç-dış özellik // illeri getirmek)
-const genericGet = async(res, Model) => {
+const genericGet = async(Model) => {
     try {
         const newModel = await Model.find();
-        successResponse(res, statusCode.OK, newModel);
+        return { newModel };
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return { error };
     }
 };
 
 // karmaşık olmayan sorgular için(ile göre ilçe getirme--)
-const genericGetByQuery = async(res, Model, query) => {
+const genericGetByQuery = async(Model, query) => {
     try {
         const newModel = await Model.find(query);
-        successResponse(res, statusCode.OK, newModel);
+        return { newModel };
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return { error };
     }
 };
 
 // ilan detayı gibi liste(array) olmayan ancak populate kullanılacak sorgular için
-const genericGetByQueryPopulate = async(res, Model, query, populate) => {
+const genericGetByQueryPopulate = async(Model, query, populate) => {
     try {
         const newModel = await Model.find(query).populate(populate);
-        successResponse(res, statusCode.OK, newModel);
+        return { newModel };
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return { error };
     }
 };
 // middleware üzerinden gelen query bilgilerine göre sorgulama yapar
@@ -50,24 +50,24 @@ const genericQueryOptions = async(req, Model, query) => {
     }
 };
 
-const genericPost = async(req, res, Model) => {
+const genericPost = async(req, Model) => {
     try {
         const newModel = new Model(req.body);
         await newModel.save();
-        successResponse(res, statusCode.OK, newModel);
+        return { newModel };
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return { error };
     }
 };
 
-const genericUpdate = async(id, body, res, Model) => {
+const genericUpdate = async(id, body, Model) => {
     try {
         const newModel = await Model.findByIdAndUpdate(id, body, {
             new: true,
         });
-        successResponse(res, statusCode.OK, newModel);
+        return { newModel };
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return { error };
     }
 };
 

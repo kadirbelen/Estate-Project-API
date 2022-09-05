@@ -15,34 +15,7 @@ const drive = google.drive({
     version: "v3",
     auth: oauth2Client,
 });
-// text yazısı
-// var sizeOf = require("image-size");
-// async function textOverlay(fileObject) {
-//     const font = await Jimp.loadFont(Jimp.FONT_SANS_64_WHITE);
-//     const image = await Jimp.read(fileObject.buffer);
-//     var dimensions = sizeOf(fileObject.buffer);
-//     const file = image.print(
-//         font,
-//         dimensions.width / 4,
-//         dimensions.height / 2,
-//         "RENTIZ"
-//     );
-//     console.log("size", dimensions.width, dimensions.height);
-//     let bufferImage;
-//     file.getBuffer(fileObject.mimetype, (err, buffer) => {
-//         bufferImage = buffer;
-//     });
-//     return bufferImage;
-// }
 
-// resimlerin üzerine logo ekleme
-
-/*
-sharp(input)
-  .toBuffer()
-  .then(data => { ... })
-  .catch(err => { ... });
-  */
 //filigran ekleme
 async function waterMark(fileObject, buffer) {
     let watermark = await Jimp.read("uploads\\rentiz.png");
@@ -76,7 +49,7 @@ async function uploadFile(fileObject) {
         const bufferStream = new stream.PassThrough();
         bufferStream.end(imageFiligran);
         const mimeType = fileObject.mimetype;
-        const fileName = Date.now() + fileObject.originalname;
+        const fileName = Date.now() + fileObject.originalname; //date format
         const response = await drive.files.create({
             requestBody: {
                 name: fileName,
@@ -132,3 +105,33 @@ async function publicUrl(req) {
 }
 
 module.exports = { publicUrl, deleteFile };
+
+
+// text yazısı
+// var sizeOf = require("image-size");
+// async function textOverlay(fileObject) {
+//     const font = await Jimp.loadFont(Jimp.FONT_SANS_64_WHITE);
+//     const image = await Jimp.read(fileObject.buffer);
+//     var dimensions = sizeOf(fileObject.buffer);
+//     const file = image.print(
+//         font,
+//         dimensions.width / 4,
+//         dimensions.height / 2,
+//         "RENTIZ"
+//     );
+//     console.log("size", dimensions.width, dimensions.height);
+//     let bufferImage;
+//     file.getBuffer(fileObject.mimetype, (err, buffer) => {
+//         bufferImage = buffer;
+//     });
+//     return bufferImage;
+// }
+
+// resimlerin üzerine logo ekleme
+
+/*
+sharp(input)
+  .toBuffer()
+  .then(data => { ... })
+  .catch(err => { ... });
+  */

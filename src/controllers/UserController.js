@@ -12,10 +12,12 @@ const genericController = require("./GenericController");
 const registerController = async(req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
+
     try {
         const user = new User({...req.body, password: hash });
         await user.save();
-        const actionUrl = `${process.env.BASE_URL}user/verify/${user.id}`;
+
+        const actionUrl = `${process.env.BASE_URL}user/verify/${user.id}`; //token geçici
         await sendEmail(user, "Email Doğrulama", actionUrl);
         successResponse(res, statusCode.OK, user);
     } catch (error) {
@@ -147,9 +149,21 @@ const userProfile = async(req, res) => {
         errorResponse(res, statusCode.BAD_REQUEST, error.message);
     }
 };
-/// /????
+
 const userUpdate = async(req, res) => {
-    await genericController.genericUpdate(req.userId, req.body, res, User);
+    try {
+        const { error, newModel } = await genericController.genericUpdate(
+            req.userId,
+            req.body,
+            User
+        );
+        if (error) {
+            errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        }
+        successResponse(res, statusCode.OK, newModel);
+    } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
 };
 
 const userPasswordUpdate = async(req, res) => {

@@ -5,16 +5,31 @@ const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 
 const categoryPost = async(req, res) => {
-    await genericController.genericPost(req, res, Category);
+    try {
+        const { error, newModel } = await genericController.genericPost(req, Category);
+        if (error) {
+            errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        }
+        successResponse(res, statusCode.OK, newModel);
+    } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
 };
 
 const categoryUpdate = async(req, res) => {
-    await genericController.genericUpdate(
-        req.params.id,
-        req.body,
-        res,
-        Category
-    );
+    try {
+        const { error, newModel } = await genericController.genericUpdate(
+            req.params.id,
+            req.body,
+            Category
+        );
+        if (error) {
+            errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        }
+        successResponse(res, statusCode.OK, newModel);
+    } catch (error) {
+        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+    }
 };
 
 const getSubCategory = async(req, res) => {
@@ -24,10 +39,10 @@ const getSubCategory = async(req, res) => {
          * 2-o category altındaki diğer kategoriler getirilir
          */
         const parent = await Category.findOne({
-            _id: "62fc9366a33fe6e0a145ea38"
+            _id: "62fc9366a33fe6e0a145ea38",
         });
         const tree = await parent.getChildrenTree({
-            options: { lean: false }
+            options: { lean: false },
         });
         successResponse(res, statusCode.OK, tree);
     } catch (error) {
