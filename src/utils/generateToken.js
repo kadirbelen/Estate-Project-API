@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv/config");
 const UserToken = require("../models/UserToken");
 
-const generateToken = async (user) => {
+const generateToken = async(user) => {
     try {
         const payload = { _id: user._id };
         const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN, {

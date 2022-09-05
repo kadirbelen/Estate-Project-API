@@ -3,11 +3,11 @@ const ExternalFeature = require("../models/featureModels/ExternalFeature");
 const InteriorFeature = require("../models/featureModels/InteriorFeature");
 const LocationFeature = require("../models/featureModels/LocationFeature");
 
-const externalPost = async (req, res) => {
+const externalPost = async(req, res) => {
     await genericController.genericPost(req, res, ExternalFeature);
 };
 
-const externalUpdate = async (req, res) => {
+const externalUpdate = async(req, res) => {
     await genericController.genericUpdate(
         req.params.id,
         req.body,
@@ -16,15 +16,15 @@ const externalUpdate = async (req, res) => {
     );
 };
 
-const externalGet = async (req, res) => {
+const externalGet = async(req, res) => {
     await genericController.genericGet(res, ExternalFeature);
 };
 
-const interiorPost = async (req, res) => {
+const interiorPost = async(req, res) => {
     await genericController.genericPost(req, res, InteriorFeature);
 };
 
-const interiorUpdate = async (req, res) => {
+const interiorUpdate = async(req, res) => {
     await genericController.genericUpdate(
         req.params.id,
         req.body,
@@ -33,15 +33,15 @@ const interiorUpdate = async (req, res) => {
     );
 };
 
-const interiorGet = async (req, res) => {
+const interiorGet = async(res) => {
     await genericController.genericGet(res, InteriorFeature);
 };
 
-const locationPost = async (req, res) => {
+const locationPost = async(req, res) => {
     await genericController.genericPost(req, res, LocationFeature);
 };
 
-const locationUpdate = async (req, res) => {
+const locationUpdate = async(req, res) => {
     await genericController.genericUpdate(
         req.params.id,
         req.body,
@@ -50,7 +50,7 @@ const locationUpdate = async (req, res) => {
     );
 };
 
-const locationGet = async (req, res) => {
+const locationGet = async(req, res) => {
     await genericController.genericGet(res, LocationFeature);
 };
 

@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
 
-const sendEmail = async (user, subject, text) => {
+const sendEmail = async(user, subject, text) => {
     try {
         const transporter = nodemailer.createTransport({
             service: "gmail",

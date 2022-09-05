@@ -3,7 +3,7 @@ const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 
 // sorgulama ihtiyacı duyulmayan veriler için (iç-dış özellik // illeri getirmek)
-const genericGet = async (res, Model) => {
+const genericGet = async(res, Model) => {
     try {
         const newModel = await Model.find();
         successResponse(res, statusCode.OK, newModel);
@@ -13,7 +13,7 @@ const genericGet = async (res, Model) => {
 };
 
 // karmaşık olmayan sorgular için(ile göre ilçe getirme--)
-const genericGetByQuery = async (res, Model, query) => {
+const genericGetByQuery = async(res, Model, query) => {
     try {
         const newModel = await Model.find(query);
         successResponse(res, statusCode.OK, newModel);
@@ -23,7 +23,7 @@ const genericGetByQuery = async (res, Model, query) => {
 };
 
 // ilan detayı gibi liste(array) olmayan ancak populate kullanılacak sorgular için
-const genericGetByQueryPopulate = async (res, Model, query, populate) => {
+const genericGetByQueryPopulate = async(res, Model, query, populate) => {
     try {
         const newModel = await Model.find(query).populate(populate);
         successResponse(res, statusCode.OK, newModel);
@@ -32,10 +32,10 @@ const genericGetByQueryPopulate = async (res, Model, query, populate) => {
     }
 };
 // middleware üzerinden gelen query bilgilerine göre sorgulama yapar
-const genericQueryOptions = async (req, Model, query) => {
+const genericQueryOptions = async(req, Model, query) => {
     try {
         if (query) {
-            req.queryOptions.filtering = { ...req.queryOptions.filtering, ...query };
+            req.queryOptions.filtering = {...req.queryOptions.filtering, ...query };
         }
         console.log("query", req.queryOptions.sorting);
         const { pageSize, page, skip } = req.queryOptions.pagination;
@@ -50,7 +50,7 @@ const genericQueryOptions = async (req, Model, query) => {
     }
 };
 
-const genericPost = async (req, res, Model) => {
+const genericPost = async(req, res, Model) => {
     try {
         const newModel = new Model(req.body);
         await newModel.save();
@@ -60,7 +60,7 @@ const genericPost = async (req, res, Model) => {
     }
 };
 
-const genericUpdate = async (id, body, res, Model) => {
+const genericUpdate = async(id, body, res, Model) => {
     try {
         const newModel = await Model.findByIdAndUpdate(id, body, {
             new: true,
@@ -71,7 +71,7 @@ const genericUpdate = async (id, body, res, Model) => {
     }
 };
 
-const genericDelete = async (req, res, Model) => {
+const genericDelete = async(req, res, Model) => {
     try {
         await Model.findByIdAndRemove(req.params.id);
         successResponse(res, statusCode.OK, "ürün silindi");

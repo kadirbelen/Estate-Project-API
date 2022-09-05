@@ -95,7 +95,7 @@ const queryOptions = (req, res, next) => {
                     .add(1, dateEnum[queryValue.length])
                     .format("YYYY-MM-DDTHH:mm:ss")}.000Z`
             };
-            mongoQuery[splitedKey[0]] = { ...gtObject, ...ltObject };
+            mongoQuery[splitedKey[0]] = {...gtObject, ...ltObject };
         } else if (["eq"].includes(splitedKey[1])) {
             mongoQuery[splitedKey[0]] = queryValue;
         } else if (["is"].includes(splitedKey[1])) {

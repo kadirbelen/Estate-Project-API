@@ -34,7 +34,7 @@ function verifyToken(req, res, next) {
 
 function verifyAndAuthorizationToken(roles) {
     return (req, res, next) => {
-        verifyToken(req, res, async () => {
+        verifyToken(req, res, async() => {
             const user = await User.findById(req.userId);
             console.log("user", user);
             const role = roles.every((item) => item.includes(user.role));

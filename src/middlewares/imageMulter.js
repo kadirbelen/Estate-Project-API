@@ -6,7 +6,7 @@ const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 },
 }).single("image");
 
-const imageUpload = async (req, res, next) => {
+const imageUpload = async(req, res, next) => {
     upload(req, res, (err) => {
         if (err) {
             return errorResponse(

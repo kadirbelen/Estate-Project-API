@@ -9,11 +9,11 @@ const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 const genericController = require("./GenericController");
 
-const registerController = async (req, res) => {
+const registerController = async(req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(req.body.password, salt);
     try {
-        const user = new User({ ...req.body, password: hash });
+        const user = new User({...req.body, password: hash });
         await user.save();
         const actionUrl = `${process.env.BASE_URL}user/verify/${user.id}`;
         await sendEmail(user, "Email Doğrulama", actionUrl);
@@ -23,7 +23,7 @@ const registerController = async (req, res) => {
     }
 };
 
-const loginController = async (req, res) => {
+const loginController = async(req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -52,7 +52,7 @@ const loginController = async (req, res) => {
     }
 };
 
-const refreshToken = async (req, res) => {
+const refreshToken = async(req, res) => {
     try {
         const userToken = await UserToken.findOne({
             refreshToken: req.body.refreshToken,
@@ -81,7 +81,7 @@ const refreshToken = async (req, res) => {
     }
 };
 
-const emailVerification = async (req, res) => {
+const emailVerification = async(req, res) => {
     try {
         // TODO:Gereksiz query
         // const user = await User.findById(req.params.id);
@@ -98,7 +98,7 @@ const emailVerification = async (req, res) => {
     }
 };
 
-const logout = async (req, res) => {
+const logout = async(req, res) => {
     try {
         const userToken = await UserToken.findOne({
             userId: req.userId,
@@ -125,7 +125,7 @@ const logout = async (req, res) => {
 //         path: "address.city address.town address.district",
 //     },
 // });
-const userProfile = async (req, res) => {
+const userProfile = async(req, res) => {
     try {
         const user = await User.findOne({ _id: req.userId }).populate({
             path: "favorities",
@@ -148,11 +148,11 @@ const userProfile = async (req, res) => {
     }
 };
 /// /????
-const userUpdate = async (req, res) => {
+const userUpdate = async(req, res) => {
     await genericController.genericUpdate(req.userId, req.body, res, User);
 };
 
-const userPasswordUpdate = async (req, res) => {
+const userPasswordUpdate = async(req, res) => {
     try {
         const { oldPassword, newPassword } = req.body;
         const user = await User.findOne({ _id: req.userId });

@@ -4,11 +4,11 @@ const genericController = require("./GenericController");
 const errorResponse = require("../responses/errorResponse");
 const successResponse = require("../responses/successResponse");
 
-const categoryPost = async (req, res) => {
+const categoryPost = async(req, res) => {
     await genericController.genericPost(req, res, Category);
 };
 
-const categoryUpdate = async (req, res) => {
+const categoryUpdate = async(req, res) => {
     await genericController.genericUpdate(
         req.params.id,
         req.body,
@@ -17,7 +17,7 @@ const categoryUpdate = async (req, res) => {
     );
 };
 
-const getSubCategory = async (req, res) => {
+const getSubCategory = async(req, res) => {
     try {
         /**
          * 1-Category_id gelir ve o category bulunur
