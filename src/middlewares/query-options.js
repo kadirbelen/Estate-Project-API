@@ -1,6 +1,6 @@
 const statusCode = require("http-status-codes").StatusCodes;
 const moment = require("moment");
-const errorResponse = require("../responses/errorResponse");
+const errorResponse = require("../responses/error-response");
 
 const queryOptions = (req, res, next) => {
     const { sortField } = req.query;

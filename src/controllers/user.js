@@ -1,13 +1,13 @@
 const statusCode = require("http-status-codes").StatusCodes;
+const errorResponse = require("../responses/error-response");
+const successResponse = require("../responses/success-response");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-const UserToken = require("../models/UserToken");
-const generateToken = require("../utils/generateToken");
-const sendEmail = require("../services/emailService");
-const errorResponse = require("../responses/errorResponse");
-const successResponse = require("../responses/successResponse");
-const genericController = require("./GenericController");
+const User = require("../models/user");
+const UserToken = require("../models/user-token");
+const generateToken = require("../utils/generate-token");
+const sendEmail = require("../services/email");
+const genericController = require("./generic");
 
 const registerController = async(req, res) => {
     const salt = bcrypt.genSaltSync(10);

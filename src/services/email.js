@@ -27,7 +27,7 @@ const sendEmail = async(user, subject, text) => {
             from: process.env.GMAIL,
             to: user.email,
             subject,
-            template: "emailVerify",
+            template: "email-verify",
             context: {
                 userName: user.userName,
                 actionUrl: text,

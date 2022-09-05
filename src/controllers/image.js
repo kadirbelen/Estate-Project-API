@@ -1,8 +1,8 @@
 const statusCode = require("http-status-codes").StatusCodes;
-const ImageTemporary = require("../models/ImageTemporary");
-const driveService = require("../services/googleDriveService");
-const errorResponse = require("../responses/errorResponse");
-const successResponse = require("../responses/successResponse");
+const errorResponse = require("../responses/error-response");
+const successResponse = require("../responses/success-response");
+const ImageTemporary = require("../models/image-temporary");
+const driveService = require("../services/google-drive");
 
 const imagePost = async(req, res) => {
     try {

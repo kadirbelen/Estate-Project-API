@@ -1,6 +1,6 @@
 const schedule = require("node-schedule");
-const { deleteFile } = require("../services/googleDriveService");
-const ImageTemporary = require("../models/ImageTemporary");
+const { deleteFile } = require("../services/google-drive");
+const ImageTemporary = require("../models/image-temporary");
 
 const rule = new schedule.RecurrenceRule();
 rule.hour = 3;

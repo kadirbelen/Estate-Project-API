@@ -1,7 +1,7 @@
 const statusCode = require("http-status-codes").StatusCodes;
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-const errorResponse = require("../responses/errorResponse");
+const User = require("../models/user");
+const errorResponse = require("../responses/error-response");
 
 function verifyToken(req, res, next) {
     try {

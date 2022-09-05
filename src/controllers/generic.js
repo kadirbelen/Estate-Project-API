@@ -1,6 +1,6 @@
 const statusCode = require("http-status-codes").StatusCodes;
-const errorResponse = require("../responses/errorResponse");
-const successResponse = require("../responses/successResponse");
+const errorResponse = require("../responses/error-response");
+const successResponse = require("../responses/success-response");
 
 // sorgulama ihtiyacı duyulmayan veriler için (iç-dış özellik // illeri getirmek)
 const genericGet = async(Model) => {

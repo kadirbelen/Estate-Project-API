@@ -1,8 +1,8 @@
 const express = require("express");
 
 const router = express.Router();
-const authToken = require("../middlewares/authToken");
-const featureController = require("../controllers/FeatureController");
+const authToken = require("../middlewares/auth-token");
+const featureController = require("../controllers/feature");
 
 router.post(
     "/interior",

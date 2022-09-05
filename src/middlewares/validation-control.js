@@ -1,6 +1,6 @@
 const statusCode = require("http-status-codes").StatusCodes;
 const validators = require("../utils/validation/validator");
-const errorResponse = require("../responses/errorResponse");
+const errorResponse = require("../responses/error-response");
 
 module.exports = function(schema) {
     return function(req, res, next) {

@@ -1,10 +1,10 @@
 const express = require("express");
 
 const router = express.Router();
-const authToken = require("../middlewares/authToken");
-const validate = require("../middlewares/validationControl");
-const advertController = require("../controllers/AdvertController");
-const queryOptions = require("../middlewares/queryOptions");
+const authToken = require("../middlewares/auth-token");
+const validate = require("../middlewares/validation-control");
+const advertController = require("../controllers/advert");
+const queryOptions = require("../middlewares/query-options");
 
 router.post(
     "/housing",

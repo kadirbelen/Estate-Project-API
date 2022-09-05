@@ -1,9 +1,9 @@
 const express = require("express");
 
 const router = express.Router();
-const validate = require("../middlewares/validationControl");
-const userController = require("../controllers/UserController");
-const authToken = require("../middlewares/authToken");
+const validate = require("../middlewares/validation-control");
+const userController = require("../controllers/user");
+const authToken = require("../middlewares/auth-token");
 
 router.post(
     "/register",

@@ -1,10 +1,10 @@
 const statusCode = require("http-status-codes").StatusCodes;
-const errorResponse = require("../responses/errorResponse");
-const successResponse = require("../responses/successResponse");
-const genericController = require("./GenericController");
-const ExternalFeature = require("../models/featureModels/ExternalFeature");
-const InteriorFeature = require("../models/featureModels/InteriorFeature");
-const LocationFeature = require("../models/featureModels/LocationFeature");
+const errorResponse = require("../responses/error-response");
+const successResponse = require("../responses/success-response");
+const ExternalFeature = require("../models/features/external");
+const InteriorFeature = require("../models/features/interior");
+const LocationFeature = require("../models/features/location");
+const genericController = require("./generic");
 
 const externalPost = async(req, res) => {
     try {

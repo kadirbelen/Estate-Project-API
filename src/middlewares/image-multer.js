@@ -1,6 +1,6 @@
 const statusCode = require("http-status-codes").StatusCodes;
 const multer = require("multer");
-const errorResponse = require("../responses/errorResponse");
+const errorResponse = require("../responses/error-response");
 
 const upload = multer({
     limits: { fileSize: 5 * 1024 * 1024 },

@@ -1,5 +1,5 @@
-const userSchema = require("./userValidate");
-const advertSchema = require("./advertValidate");
+const userSchema = require("./user");
+const advertSchema = require("./advert");
 
 const { loginSchema } = userSchema;
 const { registerSchema } = userSchema;

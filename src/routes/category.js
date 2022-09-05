@@ -1,8 +1,8 @@
 const express = require("express");
 
 const router = express.Router();
-const authToken = require("../middlewares/authToken");
-const categoryController = require("../controllers/CategoryController");
+const authToken = require("../middlewares/auth-token");
+const categoryController = require("../controllers/category");
 
 router.post(
     "/",

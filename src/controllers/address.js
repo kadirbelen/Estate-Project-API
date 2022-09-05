@@ -1,10 +1,10 @@
-const City = require("../models/addressModels/City");
-const District = require("../models/addressModels/District");
-const Town = require("../models/addressModels/Town");
 const statusCode = require("http-status-codes").StatusCodes;
-const errorResponse = require("../responses/errorResponse");
-const successResponse = require("../responses/successResponse");
-const genericController = require("./GenericController");
+const errorResponse = require("../responses/error-response");
+const successResponse = require("../responses/success-response");
+const City = require("../models/addresses/city");
+const District = require("../models/addresses/district");
+const Town = require("../models/addresses/town");
+const genericController = require("./generic");
 
 const getCity = async(req, res) => {
     try {

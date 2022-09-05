@@ -1,11 +1,12 @@
 const statusCode = require("http-status-codes").StatusCodes;
-const errorResponse = require("../responses/errorResponse");
-const successResponse = require("../responses/successResponse");
-const Advert = require("../models/Advert");
-const genericController = require("./GenericController");
-const ImageTemporary = require("../models/ImageTemporary");
-const driveService = require("../services/googleDriveService");
-const User = require("../models/User");
+const errorResponse = require("../responses/error-response");
+const successResponse = require("../responses/success-response");
+const Advert = require("../models/advert");
+const ImageTemporary = require("../models/image-temporary");
+const User = require("../models/user");
+const genericController = require("./generic");
+const driveService = require("../services/google-drive");
+
 
 // card yapısındaki field alanları için kullanıldı
 const getCard = async(res, query) => {

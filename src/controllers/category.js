@@ -1,8 +1,8 @@
 const statusCode = require("http-status-codes").StatusCodes;
-const Category = require("../models/Category");
-const genericController = require("./GenericController");
-const errorResponse = require("../responses/errorResponse");
-const successResponse = require("../responses/successResponse");
+const errorResponse = require("../responses/error-response");
+const successResponse = require("../responses/success-response");
+const Category = require("../models/category");
+const genericController = require("./generic");
 
 const categoryPost = async(req, res) => {
     try {
