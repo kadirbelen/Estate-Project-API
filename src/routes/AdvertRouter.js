@@ -8,13 +8,13 @@ const queryOptions = require("../middlewares/queryOptions");
 
 router.post(
     "/housing",
-    authToken.verifyAndAuthorizationToken(["user"]),
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
     validate("housingSchema"),
     advertController.advertPost
 );
 router.post(
     "/land",
-    authToken.verifyAndAuthorizationToken(["user"]),
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
     validate("landSchema"),
     advertController.advertPost
 );
@@ -27,7 +27,7 @@ router.post(
 router.get(
     "/user",
     queryOptions,
-    authToken.verifyAndAuthorizationToken(["user"]),
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
     advertController.advertGetByUser
 );
 router.get(
@@ -40,12 +40,12 @@ router.get("/", queryOptions, advertController.advertGetAll);
 router.patch("/:id", advertController.advertUpdate);
 router.patch(
     "/favorite/:id",
-    authToken.verifyAndAuthorizationToken(["user"]),
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
     advertController.addFavorite
 );
 router.patch(
     "/unfavorite/:id",
-    authToken.verifyAndAuthorizationToken(["user"]),
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
     advertController.deleteFavorite
 );
 router.delete("/:id", advertController.advertDelete);

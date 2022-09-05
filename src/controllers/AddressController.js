@@ -9,13 +9,13 @@ const getCity = async(res) => {
 
 const getDistrictByCity = async(req, res) => {
     await genericController.genericGetByQuery(res, District, {
-        city: req.params.cityId
+        city: req.params.cityId,
     });
 };
 
 const getTownByDistrict = async(req, res) => {
     await genericController.genericGetByQuery(res, Town, {
-        district: req.params.districtId
+        district: req.params.districtId,
     });
 };
 

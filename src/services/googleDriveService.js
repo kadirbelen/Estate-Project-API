@@ -43,6 +43,7 @@ sharp(input)
   .then(data => { ... })
   .catch(err => { ... });
   */
+//filigran ekleme
 async function waterMark(fileObject, buffer) {
     let watermark = await Jimp.read("uploads\\rentiz.png");
     watermark = watermark.resize(200, 200);
@@ -59,9 +60,10 @@ async function waterMark(fileObject, buffer) {
     return bufferImage;
 }
 
+//image kalite düşürme
 async function qualityOptions(fileObject) {
     const buffer = await sharp(fileObject.buffer)
-        .jpeg({ quality: 30, mozjpeg: true })
+        .jpeg({ quality: 50, mozjpeg: true })
         .toBuffer();
     return buffer;
 }

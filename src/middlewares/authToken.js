@@ -17,7 +17,7 @@ function verifyToken(req, res, next) {
         }
 
         const token = authorization.split(" ")[1];
-        console.log(token);
+
         jwt.verify(token, process.env.JWT_ACCESS_TOKEN, (err, decoded) => {
             console.log("decoded", decoded);
             if (err) {

@@ -14,7 +14,7 @@ router.post("/login", validate("loginSchema"), userController.loginController);
 router.post("/refreshToken", userController.refreshToken);
 router.get(
     "/profile",
-    authToken.verifyAndAuthorizationToken(["admin,user"]),
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
     userController.userProfile
 );
 router.delete(
@@ -31,8 +31,8 @@ router.put(
 );
 router.put(
     "/updatePassword",
-    validate("passwordChangeSchema"),
     authToken.verifyAndAuthorizationToken(["user,admin"]),
+    validate("passwordChangeSchema"),
     userController.userPasswordUpdate
 );
 

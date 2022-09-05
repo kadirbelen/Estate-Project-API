@@ -7,13 +7,13 @@ const imageController = require("../controllers/ImageController");
 
 router.post(
     "/upload",
-    authToken.verifyAndAuthorizationToken(["user"]),
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
     imageUpload,
     imageController.imagePost
 );
 router.delete(
     "/:remoteId",
-    authToken.verifyAndAuthorizationToken(["user"]),
+    authToken.verifyAndAuthorizationToken(["user,admin"]),
     imageController.imageDelete
 );
 

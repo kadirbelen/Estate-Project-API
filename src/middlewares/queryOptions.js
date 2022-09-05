@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 const statusCode = require("http-status-codes").StatusCodes;
 const moment = require("moment");
 const errorResponse = require("../responses/errorResponse");
@@ -27,7 +26,7 @@ const queryOptions = (req, res, next) => {
     for (const key of keys) {
         const queryValue = req.query[key];
         const splitedKey = key.split(".");
-        // key değerini "." bilgisine göre ayırdıktan sonra uzunluğu kontrol ettik
+        // key değerini "." bilgisine göre ayırdık
         if (splitedKey.length !== 2) {
             if (blackList.includes(key)) {
                 continue;
@@ -36,32 +35,18 @@ const queryOptions = (req, res, next) => {
         }
 
         if (["gt", "lt", "lte", "gte"].includes(splitedKey[1])) {
-            const regex = new RegExp(
-                /^([1-2]\d{3})\-([0]\d|[1][0-2])\-([0-2]\d|[3][0-1])(?:(?:T([0-1]\d|[2][0-3])\:([0-5]\d)(?::([0-5]\d)))?)$/
-            );
+            const checked = parseInt(queryValue);
 
-            const isValidDateFormat = regex.test(queryValue);
-
-            let newValue;
-
-            if (isValidDateFormat) {
-                const queryDate = new Date(queryValue);
-
-                if (queryDate == "Invalid Date") {
-                    return errorResponse(
-                        res,
-                        statusCode.BAD_REQUEST,
-                        "Invalid date format"
-                    );
-                }
-
-                newValue = queryDate;
-            } else {
-                newValue = queryValue;
+            if (!checked) {
+                return errorResponse(
+                    res,
+                    statusCode.BAD_REQUEST,
+                    "Invalid integer format"
+                );
             }
 
             const queryObject = {
-                [`$${splitedKey[1]}`]: newValue
+                [`$${splitedKey[1]}`]: queryValue,
             };
 
             mongoQuery[splitedKey[0]] = queryObject;
@@ -72,9 +57,9 @@ const queryOptions = (req, res, next) => {
                 10: "day",
                 13: "hour",
                 16: "minute",
-                19: "second"
+                19: "second",
             };
-
+            const replacedQueryValue = queryValue.replaceAll(".", ":");
             const gtValue = moment(queryValue).format("YYYY-MM-DDTHH:mm:ss");
 
             const queryDate = new Date(gtValue);
@@ -88,12 +73,12 @@ const queryOptions = (req, res, next) => {
             }
 
             const gtObject = {
-                $gt: `${gtValue}.000Z`
+                $gt: `${gtValue}.000Z`,
             };
             const ltObject = {
-                $lt: `${moment(queryValue)
+                $lt: `${moment(replacedQueryValue)
                     .add(1, dateEnum[queryValue.length])
-                    .format("YYYY-MM-DDTHH:mm:ss")}.000Z`
+                    .format("YYYY-MM-DDTHH:mm:ss")}.000Z`,
             };
             mongoQuery[splitedKey[0]] = {...gtObject, ...ltObject };
         } else if (["eq"].includes(splitedKey[1])) {
@@ -123,12 +108,12 @@ const queryOptions = (req, res, next) => {
 
     // req bilgisi içine querylerimizi dahil ettik
     req.queryOptions = {
-        pagination: { pageSize, page, skip }
+        pagination: { pageSize, page, skip },
     };
 
     if ((sortOrder == -1 || sortOrder == 1) && sortField) {
         req.queryOptions.sorting = {
-            [sortField]: parseInt(sortOrder, 10)
+            [sortField]: parseInt(sortOrder, 10),
         };
     }
 
