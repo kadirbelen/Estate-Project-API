@@ -43,13 +43,7 @@ router.patch(
     "/favorite/:id",
     authanticate,
     authorization(["user,admin"]),
-    advertController.addFavorite
-);
-router.patch(
-    "/unfavorite/:id",
-    authanticate,
-    authorization(["user,admin"]),
-    advertController.deleteFavorite
+    advertController.favorite
 );
 router.delete(
     "/:id",

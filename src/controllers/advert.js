@@ -11,6 +11,7 @@ const driveService = require("../services/google-drive");
 const getCard = async (res, query, next) => {
     try {
         const { list, modelLength, page, pageSize } = await query;
+
         const cardList = list
             .populate(["address.city", "address.town", "address.district"])
             .select({
@@ -137,52 +138,52 @@ const advertUpdate = async (req, res, next) => {
     }
 };
 
-//FIX:silenen ilanı favoriden çıkar
 const advertDelete = async (req, res, next) => {
     try {
         const advert = await genericController.genericDelete(req.params.id, Advert);
 
+        if (!advert) {
+            return next(new ApiError("İlan bulunamadı", statusCode.BAD_REQUEST));
+        }
+
         for (const item of advert.images) {
             await driveService.deleteFile(item.remoteId, res);
         }
+
+        await User.updateMany(
+            { favorities: advert._id },
+            { $pull: { favorities: advert._id } }
+        );
+
         return successResponse(res, statusCode.OK, "İlan silindi");
     } catch (error) {
         return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const addFavorite = async (req, res, next) => {
+const favorite = async (req, res, next) => {
     try {
-        const advert = await Advert.findByIdAndUpdate(req.params.id, {
-            $inc: { favoriteCount: 1 },
-        });
+        const user = await User.findOne({ favorities: req.params.id, _id: req.userId });
 
-        await User.findByIdAndUpdate(
-            req.userId,
-            {
-                $push: { favorities: advert._id },
-            },
-            { new: true }
-        );
-        successResponse(res, statusCode.OK, "İlan favoriye eklendi");
-    } catch (error) {
-        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
-    }
-};
+        let data;
 
-const deleteFavorite = async (req, res, next) => {
-    try {
-        const advert = await Advert.findById(req.params.id);
-        advert.favoriteCount -= 1;
-        advert.save();
-        await User.findByIdAndUpdate(
-            req.userId,
-            {
-                $pull: { favorities: advert._id },
-            },
-            { new: true }
-        );
-        successResponse(res, statusCode.OK, "İlan favoriden çıkarıldı");
+        if (user) {
+            data = {
+                action: { $pull: { favorities: req.params.id } },
+                increament: { $inc: { favoriteCount: -1 } },
+            };
+        } else {
+            data = {
+                action: { $push: { favorities: req.params.id } },
+                increament: { $inc: { favoriteCount: 1 } },
+            };
+        }
+
+        await Advert.findByIdAndUpdate(req.params.id, data.increament);
+
+        await User.findByIdAndUpdate(req.userId, data.action, { new: true });
+
+        successResponse(res, statusCode.OK);
     } catch (error) {
         return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
@@ -196,6 +197,5 @@ module.exports = {
     advertGetByCategory,
     advertDelete,
     advertUpdate,
-    addFavorite,
-    deleteFavorite,
+    favorite,
 };
