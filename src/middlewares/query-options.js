@@ -1,6 +1,6 @@
 const statusCode = require("http-status-codes").StatusCodes;
 const moment = require("moment");
-const errorResponse = require("../responses/error-response");
+const ApiError = require("../responses/error-response");
 
 const queryOptions = (req, res, next) => {
     const { sortField } = req.query;
@@ -38,10 +38,8 @@ const queryOptions = (req, res, next) => {
             const checked = parseInt(queryValue);
 
             if (!checked) {
-                return errorResponse(
-                    res,
-                    statusCode.BAD_REQUEST,
-                    "Invalid integer format"
+                return next(
+                    new ApiError("Invalid integer format", statusCode.BAD_REQUEST)
                 );
             }
 
@@ -65,11 +63,7 @@ const queryOptions = (req, res, next) => {
             const queryDate = new Date(gtValue);
 
             if (!dateEnum[queryValue.length] || queryDate == "Invalid Date") {
-                return errorResponse(
-                    res,
-                    statusCode.BAD_REQUEST,
-                    "Invalid date format"
-                );
+                return next(new ApiError("Invalid date format", statusCode.BAD_REQUEST));
             }
 
             const gtObject = {
@@ -80,7 +74,7 @@ const queryOptions = (req, res, next) => {
                     .add(1, dateEnum[queryValue.length])
                     .format("YYYY-MM-DDTHH:mm:ss")}.000Z`,
             };
-            mongoQuery[splitedKey[0]] = {...gtObject, ...ltObject };
+            mongoQuery[splitedKey[0]] = { ...gtObject, ...ltObject };
         } else if (["eq"].includes(splitedKey[1])) {
             mongoQuery[splitedKey[0]] = queryValue;
         } else if (["is"].includes(splitedKey[1])) {

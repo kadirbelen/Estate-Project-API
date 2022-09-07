@@ -1,5 +1,5 @@
 const statusCode = require("http-status-codes").StatusCodes;
-const errorResponse = require("../responses/error-response");
+const ApiError = require("../responses/error-response");
 const successResponse = require("../responses/success-response");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -9,70 +9,68 @@ const generateToken = require("../utils/generate-token");
 const sendEmail = require("../services/email");
 const genericController = require("./generic");
 
-const registerController = async(req, res) => {
+const registerController = async (req, res, next) => {
     try {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(req.body.password, salt);
 
-        const user = new User({...req.body, password: hash });
+        const user = new User({ ...req.body, password: hash });
         await user.save();
 
-        const { emailToken, error } = await generateToken.emailGenerateToken(user);
-        console.log("t", emailToken);
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        const actionUrl = `${process.env.BASE_URL}users/verify/${emailToken}`;
+        const emailToken = await generateToken.emailGenerateToken(user);
 
+        const actionUrl = `${process.env.BASE_URL}users/verify/${emailToken}`;
         await sendEmail(user, "Email Doğrulama", actionUrl);
+
         successResponse(res, statusCode.OK, user);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const loginController = async(req, res) => {
+const loginController = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
         const user = await User.findOne({ email });
 
         if (!user || user.verified === false) {
-            errorResponse(
-                res,
-                statusCode.BAD_REQUEST,
-                "Invalid email or email not verified"
+            return next(
+                new ApiError(
+                    "Invalid email or email not verified",
+                    statusCode.BAD_REQUEST
+                )
             );
-            return;
         }
         const isValid = bcrypt.compareSync(password, user.password);
         if (!isValid) {
-            errorResponse(res, statusCode.BAD_REQUEST, "Invalid email or password");
-            return;
+            return next(
+                new ApiError("Invalid email or password", statusCode.BAD_REQUEST)
+            );
         }
         const token = await generateToken.generateToken(user);
         successResponse(res, statusCode.OK, token);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const refreshToken = async(req, res) => {
+const refreshToken = async (req, res, next) => {
     try {
         const userToken = await UserToken.findOne({
             refreshToken: req.body.refreshToken,
         });
         if (!userToken) {
-            errorResponse(res, statusCode.BAD_REQUEST, "Token is not valid");
-            return;
+            return next(new ApiError("Token is not valid", statusCode.BAD_REQUEST));
         }
         jwt.verify(
             req.body.refreshToken,
             process.env.JWT_REFRESH_TOKEN,
             (err, decoded) => {
                 if (err) {
-                    errorResponse(res, statusCode.BAD_REQUEST, "Token is not valid");
-                    return;
+                    return next(
+                        new ApiError("Token is not valid", statusCode.BAD_REQUEST)
+                    );
                 }
                 const payload = { _id: decoded._id };
                 const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN, {
@@ -82,23 +80,20 @@ const refreshToken = async(req, res) => {
             }
         );
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const emailVerification = async(req, res) => {
+const emailVerification = async (req, res, next) => {
     try {
         let userId;
         console.log("token", req.params.token);
         jwt.verify(req.params.token, process.env.JWT_ACCESS_TOKEN, (err, decoded) => {
-            console.log("decoded", decoded);
             if (err) {
-                errorResponse(res, statusCode.BAD_REQUEST, "Token is not valid");
-                return;
+                return next(new ApiError("Token is not valid", statusCode.BAD_REQUEST));
             }
             userId = decoded._id;
         });
-        console.log("id", userId);
         await User.findByIdAndUpdate(userId, { verified: true });
         successResponse(
             res,
@@ -106,96 +101,83 @@ const emailVerification = async(req, res) => {
             "email doğrulandı sisteme giriş yapabilirsiniz"
         );
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const logout = async(req, res) => {
+const logout = async (req, res, next) => {
     try {
-        const userToken = await UserToken.findOne({
+        await UserToken.findOneAndRemove({
             userId: req.userId,
         });
-        userToken.remove();
         successResponse(res, statusCode.OK, "Çıkış işlemi başarılı");
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
-    }
-};
-// select: "images title price address squareMeters type createdAt",
-// const user = await User.findOne({ _id: req.userId }).populate({
-//     path: "favorities",
-//     select: {
-//         images: { $slice: ["$images", 1] },
-//         title: 1,
-//         price: 1,
-//         address: 1,
-//         squareMeters: 1,
-//         type: 1,
-//         createdAt: 1,
-//     },
-//     populate: {
-//         path: "address.city address.town address.district",
-//     },
-// });
-const userProfile = async(req, res) => {
-    try {
-        const user = await User.findOne({ _id: req.userId }).populate({
-            path: "favorities",
-            select: {
-                images: { $slice: ["$images", 1] },
-                title: 1,
-                price: 1,
-                address: 1,
-                squareMeters: 1,
-                type: 1,
-                createdAt: 1,
-            },
-            populate: {
-                path: "address.city address.town address.district",
-            },
-        });
-        successResponse(res, statusCode.OK, user);
-    } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const userUpdate = async(req, res) => {
+const userProfile = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericUpdate(
-            req.userId,
-            req.body,
-            User
+        const data = await genericController.genericGetByQueryPopulate(
+            User,
+            { _id: req.userId },
+            {
+                path: "favorities",
+                select: {
+                    images: { $slice: ["$images", 1] },
+                    title: 1,
+                    price: 1,
+                    address: 1,
+                    squareMeters: 1,
+                    type: 1,
+                    createdAt: 1,
+                },
+                populate: {
+                    path: "address.city address.town address.district",
+                },
+            }
         );
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const userPasswordUpdate = async(req, res) => {
+const userUpdate = async (req, res, next) => {
+    try {
+        const data = await genericController.genericUpdate(req.userId, req.body, User);
+
+        successResponse(res, statusCode.OK, data);
+    } catch (error) {
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
+    }
+};
+
+const userPasswordUpdate = async (req, res, next) => {
     try {
         const { oldPassword, newPassword } = req.body;
-        const user = await User.findOne({ _id: req.userId });
-        console.log("id", req.userId);
-        const isValid = bcrypt.compareSync(oldPassword, user.password);
-        console.log(isValid);
+        const data = await genericController.genericGetByQueryId(User, req.userId);
+
+        const isValid = bcrypt.compareSync(oldPassword, data.password);
         if (!isValid) {
-            errorResponse(res, statusCode.BAD_REQUEST, "old password is not valid");
-            return;
+            return next(
+                new ApiError("Old password is not valid", statusCode.BAD_REQUEST)
+            );
         }
+
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(newPassword, salt);
-        const updateUser = await User.findByIdAndUpdate(req.userId, {
-            password: hash,
-        });
+
+        const updateUser = await genericController.genericUpdate(
+            req.userId,
+            { password: hash },
+            User
+        );
 
         successResponse(res, statusCode.OK, updateUser);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 

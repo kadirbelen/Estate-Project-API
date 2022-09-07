@@ -1,48 +1,42 @@
 const statusCode = require("http-status-codes").StatusCodes;
-const errorResponse = require("../responses/error-response");
+const ApiError = require("../responses/error-response");
 const successResponse = require("../responses/success-response");
 const City = require("../models/addresses/city");
 const District = require("../models/addresses/district");
 const Town = require("../models/addresses/town");
 const genericController = require("./generic");
 
-const getCity = async(req, res) => {
+const getCity = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericGet(City);
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+        const data = await genericController.genericGet(City);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const getDistrictByCity = async(req, res) => {
+const getDistrictByCity = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericGetByQuery(District, {
+        const data = await genericController.genericGetByQuery(District, {
             city: req.params.cityId,
         });
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const getTownByDistrict = async(req, res) => {
+const getTownByDistrict = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericGetByQuery(Town, {
+        const data = await genericController.genericGetByQuery(Town, {
             district: req.params.districtId,
         });
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 

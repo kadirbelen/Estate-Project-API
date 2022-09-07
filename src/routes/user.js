@@ -3,35 +3,36 @@ const express = require("express");
 const router = express.Router();
 const validate = require("../middlewares/validation-control");
 const userController = require("../controllers/user");
-const authToken = require("../middlewares/auth-token");
+const authorization = require("../middlewares/authorization");
+const authanticate = require("../middlewares/authanticate");
 
-router.post(
-    "/register",
-    validate("registerSchema"),
-    userController.registerController
-);
+router.post("/register", validate("registerSchema"), userController.registerController);
 router.post("/login", validate("loginSchema"), userController.loginController);
 router.post("/refreshToken", userController.refreshToken);
 router.get(
     "/profile",
-    authToken.verifyAndAuthorizationToken(["user,admin"]),
+    authanticate,
+    authorization(["user,admin"]),
     userController.userProfile
 );
 router.delete(
     "/logout",
-    authToken.verifyAndAuthorizationToken(["user,admin"]),
+    authanticate,
+    authorization(["user,admin"]),
     userController.logout
 );
 router.get("/verify/:token", userController.emailVerification);
 
 router.put(
     "/updateUser",
-    authToken.verifyAndAuthorizationToken(["user,admin"]),
+    authanticate,
+    authorization(["user,admin"]),
     userController.userUpdate
 );
 router.put(
     "/updatePassword",
-    authToken.verifyAndAuthorizationToken(["user,admin"]),
+    authanticate,
+    authorization(["user,admin"]),
     validate("passwordChangeSchema"),
     userController.userPasswordUpdate
 );

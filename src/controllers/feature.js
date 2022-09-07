@@ -1,137 +1,108 @@
 const statusCode = require("http-status-codes").StatusCodes;
-const errorResponse = require("../responses/error-response");
+const ApiError = require("../responses/error-response");
 const successResponse = require("../responses/success-response");
 const ExternalFeature = require("../models/features/external");
 const InteriorFeature = require("../models/features/interior");
 const LocationFeature = require("../models/features/location");
 const genericController = require("./generic");
 
-const externalPost = async(req, res) => {
+const externalPost = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericPost(
-            req,
-            ExternalFeature
-        );
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+        const data = await genericController.genericPost(req.body, ExternalFeature);
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const externalUpdate = async(req, res) => {
+const externalUpdate = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericUpdate(
+        const data = await genericController.genericUpdate(
             req.params.id,
             req.body,
             ExternalFeature
         );
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const externalGet = async(req, res) => {
+const externalGet = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericGet(ExternalFeature);
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+        const data = await genericController.genericGet(ExternalFeature);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const interiorPost = async(req, res) => {
+const interiorPost = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericPost(
-            req,
-            InteriorFeature
-        );
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+        const data = await genericController.genericPost(req.body, InteriorFeature);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const interiorUpdate = async(req, res) => {
+const interiorUpdate = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericUpdate(
+        const data = await genericController.genericUpdate(
             req.params.id,
             req.body,
             InteriorFeature
         );
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const interiorGet = async(res) => {
+const interiorGet = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericGet(InteriorFeature);
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+        const data = await genericController.genericGet(InteriorFeature);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const locationPost = async(req, res) => {
+const locationPost = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericPost(
-            req,
-            LocationFeature
-        );
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+        const data = await genericController.genericPost(req.body, LocationFeature);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const locationUpdate = async(req, res) => {
+const locationUpdate = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericUpdate(
+        const data = await genericController.genericUpdate(
             req.params.id,
             req.body,
             LocationFeature
         );
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const locationGet = async(req, res) => {
+const locationGet = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericGet(LocationFeature);
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+        const data = await genericController.genericGet(LocationFeature);
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 

@@ -1,5 +1,5 @@
 const statusCode = require("http-status-codes").StatusCodes;
-const errorResponse = require("../responses/error-response");
+const ApiError = require("../responses/error-response");
 const successResponse = require("../responses/success-response");
 const Advert = require("../models/advert");
 const ImageTemporary = require("../models/image-temporary");
@@ -7,14 +7,10 @@ const User = require("../models/user");
 const genericController = require("./generic");
 const driveService = require("../services/google-drive");
 
-
 // card yapısındaki field alanları için kullanıldı
-const getCard = async(res, query) => {
+const getCard = async (res, query, next) => {
     try {
-        const { list, modelLength, page, pageSize, error } = await query;
-        if (error) {
-            return errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
+        const { list, modelLength, page, pageSize } = await query;
         const cardList = list
             .populate(["address.city", "address.town", "address.district"])
             .select({
@@ -27,31 +23,34 @@ const getCard = async(res, query) => {
                 favoriteCount: 1,
                 createdAt: 1,
             });
+
         const data = await cardList.exec();
+
         return successResponse(res, statusCode.OK, data, {
             currentPage: page || 1,
             totalPage: parseInt(modelLength.length / pageSize, 10) + 1 || 1,
         });
     } catch (error) {
-        return errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const advertPost = async(req, res) => {
+const advertPost = async (req, res, next) => {
     try {
         const images = await Promise.all(
-            req.body.images.map(async(item) => {
+            req.body.images.map(async (item) => {
                 const temporary = await ImageTemporary.findOne({
                     remoteId: item,
                 });
+
                 if (!temporary) {
-                    return errorResponse(
-                        res,
-                        statusCode.BAD_REQUEST,
-                        `${item} Image not defined`
+                    return next(
+                        new ApiError("Image not defined", statusCode.BAD_REQUEST)
                     );
                 }
-                await ImageTemporary.findByIdAndRemove(temporary._id);
+
+                await genericController.genericDelete(temporary._id, ImageTemporary);
+
                 return {
                     remoteId: temporary.remoteId,
                     url: temporary.url,
@@ -71,16 +70,18 @@ const advertPost = async(req, res) => {
 
         return successResponse(res, statusCode.OK, advert);
     } catch (error) {
-        return errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const advertGetById = async(req, res) => {
+const advertGetById = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericGetByQueryPopulate(
-            Advert, {
+        const newModel = await genericController.genericGetByQueryPopulate(
+            Advert,
+            {
                 _id: req.params.id,
-            }, [
+            },
+            [
                 "user",
                 "address.city",
                 "address.town",
@@ -90,98 +91,100 @@ const advertGetById = async(req, res) => {
                 "locationFeatures",
             ]
         );
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
+
         successResponse(res, statusCode.OK, newModel);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
 // tüm ilanları listeler ve aynı zamanda query bilgisine görede filtreleme yapabilir
-const advertGetAll = async(req, res) => {
-    await getCard(res, genericController.genericQueryOptions(req, Advert));
+const advertGetAll = async (req, res, next) => {
+    await getCard(res, genericController.genericQueryOptions(req, Advert), next);
 };
 
 // user'ın ilanlarım kısmı
-const advertGetByUser = async(req, res) => {
+const advertGetByUser = async (req, res, next) => {
     await getCard(
         res,
-        genericController.genericQueryOptions(req, Advert, { user: req.userId })
+        genericController.genericQueryOptions(req, Advert, { user: req.userId }),
+        next
     );
 };
 // category path için ilanları listeler
-const advertGetByCategory = async(req, res) => {
+const advertGetByCategory = async (req, res, next) => {
     await getCard(
         res,
         genericController.genericQueryOptions(req, Advert, {
             // eslint-disable-next-line no-useless-escape
             categoryPath: new RegExp(`\^${req.params.path}`),
-        })
+        }),
+        next
     );
 };
 
-const advertUpdate = async(req, res) => {
+const advertUpdate = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericUpdate(
+        const advert = await genericController.genericUpdate(
             req.params.id,
             req.body,
             Advert
         );
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+
+        successResponse(res, statusCode.OK, advert);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const advertDelete = async(req, res) => {
+//FIX:silenen ilanı favoriden çıkar
+const advertDelete = async (req, res, next) => {
     try {
-        const advert = await Advert.findByIdAndRemove(req.params.id);
-        if (!advert) {
-            return errorResponse(res, statusCode.BAD_REQUEST, "İlan silinemedi");
-        }
+        const advert = await genericController.genericDelete(req.params.id, Advert);
+
         for (const item of advert.images) {
             await driveService.deleteFile(item.remoteId, res);
         }
         return successResponse(res, statusCode.OK, "İlan silindi");
     } catch (error) {
-        return errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const addFavorite = async(req, res) => {
+const addFavorite = async (req, res, next) => {
     try {
-        const advert = await Advert.findById(req.params.id);
-        advert.favoriteCount += 1;
-        await advert.save();
+        const advert = await Advert.findByIdAndUpdate(req.params.id, {
+            $inc: { favoriteCount: 1 },
+        });
+
         await User.findByIdAndUpdate(
-            req.userId, {
+            req.userId,
+            {
                 $push: { favorities: advert._id },
-            }, { new: true }
+            },
+            { new: true }
         );
         successResponse(res, statusCode.OK, "İlan favoriye eklendi");
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const deleteFavorite = async(req, res) => {
+const deleteFavorite = async (req, res, next) => {
     try {
         const advert = await Advert.findById(req.params.id);
         advert.favoriteCount -= 1;
         advert.save();
         await User.findByIdAndUpdate(
-            req.userId, {
+            req.userId,
+            {
                 $pull: { favorities: advert._id },
-            }, { new: true }
+            },
+            { new: true }
         );
         successResponse(res, statusCode.OK, "İlan favoriden çıkarıldı");
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 

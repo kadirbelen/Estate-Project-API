@@ -1,38 +1,34 @@
 const statusCode = require("http-status-codes").StatusCodes;
-const errorResponse = require("../responses/error-response");
+const ApiError = require("../responses/error-response");
 const successResponse = require("../responses/success-response");
 const Category = require("../models/category");
 const genericController = require("./generic");
 
-const categoryPost = async(req, res) => {
+const categoryPost = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericPost(req, Category);
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+        const data = await genericController.genericPost(req.body, Category);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const categoryUpdate = async(req, res) => {
+const categoryUpdate = async (req, res, next) => {
     try {
-        const { error, newModel } = await genericController.genericUpdate(
+        const data = await genericController.genericUpdate(
             req.params.id,
             req.body,
             Category
         );
-        if (error) {
-            errorResponse(res, statusCode.BAD_REQUEST, error.message);
-        }
-        successResponse(res, statusCode.OK, newModel);
+
+        successResponse(res, statusCode.OK, data);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 
-const getSubCategory = async(req, res) => {
+const getSubCategory = async (req, res, next) => {
     try {
         /**
          * 1-Category_id gelir ve o category bulunur
@@ -46,7 +42,7 @@ const getSubCategory = async(req, res) => {
         });
         successResponse(res, statusCode.OK, tree);
     } catch (error) {
-        errorResponse(res, statusCode.BAD_REQUEST, error.message);
+        return next(new ApiError(error.message, statusCode.BAD_REQUEST));
     }
 };
 

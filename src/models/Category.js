@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
 const PathPlugin = require("mongoose-mpath");
 
-const CategorySchema = new mongoose.Schema({
-    categoryName: { type: String },
-}, {
-    versionKey: false,
-});
+const CategorySchema = new mongoose.Schema(
+    {
+        categoryName: { type: String },
+    },
+    {
+        versionKey: false,
+    }
+);
 
 const pluginOperations = {
     pathSeparator: ",", // String used to separate ids in path

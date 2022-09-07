@@ -42,70 +42,55 @@ async function qualityOptions(fileObject) {
 }
 
 async function uploadFile(fileObject) {
-    try {
-        const { buffer } = await qualityOptions(fileObject);
-        const imageFiligran = await waterMark(fileObject, buffer);
-        const folderId = "1hFKDwve9yGDUgmLaByVun_kaSzJmi8S9";
-        const bufferStream = new stream.PassThrough();
-        bufferStream.end(imageFiligran);
-        const mimeType = fileObject.mimetype;
-        const fileName = Date.now() + fileObject.originalname; //date format
-        const response = await drive.files.create({
-            requestBody: {
-                name: fileName,
-                mimeType,
-                parents: [folderId],
-            },
-            media: {
-                mimeType,
-                body: bufferStream,
-            },
-        });
-        return response.data;
-    } catch (error) {
-        return error;
-    }
+    const { buffer } = await qualityOptions(fileObject);
+    const imageFiligran = await waterMark(fileObject, buffer);
+    const folderId = "1hFKDwve9yGDUgmLaByVun_kaSzJmi8S9";
+    const bufferStream = new stream.PassThrough();
+    bufferStream.end(imageFiligran);
+    const mimeType = fileObject.mimetype;
+    const fileName = Date.now() + fileObject.originalname; //date format
+    const response = await drive.files.create({
+        requestBody: {
+            name: fileName,
+            mimeType,
+            parents: [folderId],
+        },
+        media: {
+            mimeType,
+            body: bufferStream,
+        },
+    });
+    return response.data;
 }
 
 async function deleteFile(fileId) {
-    try {
-        await drive.files.delete({
-            fileId,
-        });
-    } catch (error) {
-        console.log(error.message);
-    }
+    await drive.files.delete({
+        fileId,
+    });
 }
 
 async function publicUrl(req) {
-    try {
-        const { file } = req;
-        console.log("file", file);
-        const data = await uploadFile(file);
-        await drive.permissions.create({
-            fileId: data.id,
-            requestBody: {
-                role: "reader",
-                type: "anyone",
-            },
-        });
-        const result = await drive.files.get({
-            fileId: data.id,
-            fields: "webViewLink,webContentLink",
-        });
-        const imageUrl = await result.data.webContentLink.split(
-            "&export=download"
-        )[0];
+    const { file } = req;
+    console.log("file", file);
+    const data = await uploadFile(file);
+    await drive.permissions.create({
+        fileId: data.id,
+        requestBody: {
+            role: "reader",
+            type: "anyone",
+        },
+    });
+    const result = await drive.files.get({
+        fileId: data.id,
+        fields: "webViewLink,webContentLink",
+    });
+    const imageUrl = await result.data.webContentLink.split("&export=download")[0];
 
-        const response = { remoteId: data.id, url: imageUrl, name: data.name };
-        return response;
-    } catch (error) {
-        return error;
-    }
+    const response = { remoteId: data.id, url: imageUrl, name: data.name };
+    return response;
 }
 
 module.exports = { publicUrl, deleteFile };
-
 
 // text yazısı
 // var sizeOf = require("image-size");
